@@ -1,5 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import { prisma } from "../../db";
 
 const router = express.Router();
 
@@ -27,22 +28,38 @@ router.post("/token", (req, res) => {
 
 router.delete("/logout", (req, res) => {});
 
-router.post("/login", (req, res) => {
-  const username = req.body.username;
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
-  const user = { username: username };
+  const userData = await prisma.user.findFirst({
+    where: { username: username, password: password },
+  });
 
-  const accessToken = generateAccessToken(user);
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-  refreshTokens.push(refreshToken);
+  if (!userData) {
+    return res.sendStatus(401);
+  }
 
-  res
-    .status(200)
-    .json({ accessToken: accessToken, refreshToken: refreshToken });
+  const accessToken = generateAccessToken(userData);
+  // const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+  // refreshTokens.push(refreshToken);
+
+  res.status(200).json({ accessToken: accessToken });
 });
-
-export default router;
 
 function generateAccessToken(user: { username: string }) {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" });
 }
+
+router.post("/register", async (req, res) => {
+  const { username, email, password } = req.body;
+  try {
+    const user = await prisma.user.create({
+      data: { username: username, email: email, password: password },
+    });
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(500).send({ error: err });
+  }
+});
+
+export default router;

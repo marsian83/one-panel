@@ -1,4 +1,5 @@
 import fs from "fs";
+import bcrypt from "bcrypt";
 
 export function readPortFromConfig(callback: (port: number | false) => void) {
   const filePath = "../config.json";
@@ -21,4 +22,22 @@ export function readPortFromConfig(callback: (port: number | false) => void) {
       callback(false);
     }
   });
+}
+
+export async function hashPassword(
+  password: string,
+  saltRounds = 10
+): Promise<string> {
+  try {
+    // Generate a salt
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    // Hash the password using the generated salt
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    return hashedPassword;
+  } catch (error) {
+    // Handle any errors during the hashing process
+    throw new Error(`Error hashing password: ${error}`);
+  }
 }

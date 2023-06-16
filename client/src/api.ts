@@ -49,7 +49,7 @@ const api = {
           password: password,
         })
       )
-    ).data.error;
+    ).data;
 
     if (userData.error) {
       throw new Error(userData.error);

@@ -5,6 +5,7 @@ import cors from "cors";
 import indexRouter from "./src/routes/_index";
 
 import { frontendUrl } from "./config";
+import { prisma } from "./db";
 
 const PORT = Number(process.env.PORT) || 9090;
 
@@ -17,4 +18,5 @@ app.use("/", indexRouter);
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
+  prisma.$connect();
 });

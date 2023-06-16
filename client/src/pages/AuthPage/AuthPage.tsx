@@ -1,9 +1,9 @@
-export default function Auth() {
+import Login from "./components/Login";
+
+export default function AuthPage() {
   return (
     <>
-      <form className="">
-        <input type="text" />
-      </form>
+      <Login />
     </>
   );
 }

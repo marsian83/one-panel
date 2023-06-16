@@ -11,44 +11,21 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   username  String
   password  String
   Databases DB[]
-  Products  Product[]
-  productId Int?
-  roles     Roles[]
-}
-
-model Roles {
-  user         User       @relation(fields: [userId], references: [id])
-  userId       Int
-  collection   Collection @relation(fields: [collectionId], references: [id])
-  collectionId Int
-  assignedAt   DateTime   @default(now())
-
-  @@id([collectionId, userId])
 }
 
 model DB {
-  uri      String    @id
-  owner    User      @relation(fields: [userId], references: [id])
-  products Product[]
-  userId   Int
-}
-
-model Product {
   id          Int          @id @default(autoincrement())
-  DB          DB?          @relation(fields: [dBUri], references: [uri])
-  dBUri       String?
-  superAdmins User[]
   collections Collection[]
+  User        User?        @relation(fields: [userId], references: [id])
+  userId      Int?
 }
 
 model Collection {
-  structure Json
-  id        Int      @id @default(autoincrement())
-  Product   Product? @relation(fields: [productId], references: [id])
-  productId Int?
-  admins    Roles[]
+  id   Int  @id @default(autoincrement())
+  DB   DB?  @relation(fields: [dBId], references: [id])
+  dBId Int?
 }

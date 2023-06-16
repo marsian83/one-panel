@@ -3,7 +3,7 @@ export default function Login() {
     <form className="flex flex-col m-8 gap-y-2 w-96 items-center">
       <input
         type="text"
-        placeholder="username / email"
+        placeholder="username"
         className="border-black border p-2 rounded-md"
       />
       <input

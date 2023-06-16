@@ -1,12 +1,4 @@
-import { Request } from "express";
 import fs from "fs";
-
-export function getAuthToken(req: Request): string | false {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return false;
-  return token;
-}
 
 export function readPortFromConfig(callback: (port: number | false) => void) {
   const filePath = "../config.json";

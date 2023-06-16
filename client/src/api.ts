@@ -13,7 +13,6 @@ function createApi() {
       Authorization: jwt,
       "Content-Type": "application/json",
     },
-    withCredentials: true,
   });
 }
 
@@ -33,11 +32,31 @@ const api = {
         })
       )
     ).data;
+
     if (userData.error) {
       throw new Error(userData.error);
     }
+
+    console.log(userData);
   },
-  register() {},
+  async register(username: string, email: string, password: string) {
+    const userData = (
+      await client.post(
+        "/auth/register",
+        JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        })
+      )
+    ).data.error;
+
+    if (userData.error) {
+      throw new Error(userData.error);
+    }
+
+    console.log(userData);
+  },
   logout() {},
   getUserName() {},
 };

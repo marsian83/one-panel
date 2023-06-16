@@ -6,7 +6,7 @@ import indexRouter from "./src/routes/_index";
 
 import { frontendUrl } from "./config";
 
-const PORT = Number(process.env.PORT) || 9000;
+const PORT = Number(process.env.PORT) || 9090;
 
 const app = express();
 

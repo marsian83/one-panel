@@ -10,7 +10,7 @@ function createApi() {
     baseURL: serverUrl,
     timeout: 5000,
     headers: {
-      Authorization: jwt,
+      Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",
     },
   });
@@ -18,7 +18,7 @@ function createApi() {
 
 export function setJwt(token: string) {
   jwt = token;
-  client = createApi();
+  client.defaults.headers["Authorization"] = `Bearer ${jwt}`;
 }
 
 const api = {
@@ -38,6 +38,11 @@ const api = {
     }
 
     console.log(userData);
+    console.log(client.defaults.headers);
+
+    if (userData.accessToken) {
+      setJwt(userData.accessToken);
+    }
   },
   async register(username: string, email: string, password: string) {
     const userData = (

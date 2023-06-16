@@ -1,34 +1,35 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../db";
+import { unauthorisedOnly } from "../middleware/auth";
 
 const router = express.Router();
 
-const refreshTokens: string[] = [];
+// const refreshTokens: string[] = [];
 
-router.post("/token", (req, res) => {
-  const refreshToken = req.body.token;
-  if (refreshToken == null) return res.sendStatus(401);
-  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    {},
-    (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-      const accessToken = generateAccessToken({
-        username: (user as any).name,
-      });
-      res.json({ accessToken: accessToken });
-    }
-  );
-});
+// router.post("/token", (req, res) => {
+//   const refreshToken = req.body.token;
+//   if (refreshToken == null) return res.sendStatus(401);
+//   if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+//   jwt.verify(
+//     refreshToken,
+//     process.env.REFRESH_TOKEN_SECRET,
+//     {},
+//     (err, user) => {
+//       if (err) {
+//         return res.sendStatus(403);
+//       }
+//       const accessToken = generateAccessToken({
+//         username: (user as any).name,
+//       });
+//       res.json({ accessToken: accessToken });
+//     }
+//   );
+// });
 
 router.delete("/logout", (req, res) => {});
 
-router.post("/login", async (req, res) => {
+router.post("/login", unauthorisedOnly, async (req, res) => {
   const { username, password } = req.body;
 
   const userData = await prisma.user.findFirst({
@@ -47,10 +48,10 @@ router.post("/login", async (req, res) => {
 });
 
 function generateAccessToken(user: { username: string }) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20h" });
 }
 
-router.post("/register", async (req, res) => {
+router.post("/register", unauthorisedOnly, async (req, res) => {
   const { username, email, password } = req.body;
   try {
     const user = await prisma.user.create({

@@ -12,7 +12,9 @@ import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
 import { useEffect } from "react";
 import { getTokenFromLocalStorage } from "./utils";
-import api, { setJwt } from "./api";
+import api, { clearJwt, setJwt } from "./api";
+import ProtectedRoute from "./common/ProtectedRoute";
+import DatabasesPage from "./pages/DatabasesPage/DatabasesPage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -20,6 +22,7 @@ export default function App() {
       <Route path="/" element={<Root />}>
         <Route index element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <ProtectedRoute path="/dashboard" element={<DatabasesPage />} />
       </Route>
     )
   );
@@ -45,7 +48,8 @@ async function checkAndValidateLocalToken() {
   const token = getTokenFromLocalStorage();
   if (token) {
     if (await api.validateToken(token)) {
-      setJwt(token);
+      return setJwt(token);
     }
+    clearJwt();
   }
 }

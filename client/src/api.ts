@@ -28,6 +28,8 @@ export function clearJwt() {
 }
 
 const api = {
+  client: client,
+
   async login(username: string, password: string) {
     const userData = (
       await client.post(
@@ -71,10 +73,10 @@ const api = {
     }
   },
 
-  logout() {
+  async logout() {
     clearTokenFromLocalStorage();
     clearJwt();
-    client.delete("/auth/logout");
+    await client.delete("/auth/logout");
     window.location.reload();
   },
 

@@ -43,16 +43,17 @@ router.post("/login", unauthorisedOnly, async (req, res) => {
     return res.sendStatus(401);
   }
 
-  const accessToken = generateAccessToken(userData);
+  const user = { id: userData.id, username: userData.username };
+
+  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "20h",
+  });
+
   // const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
   // refreshTokens.push(refreshToken);
 
   res.status(200).json({ accessToken: accessToken });
 });
-
-function generateAccessToken(user: { username: string }) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20h" });
-}
 
 router.post("/register", unauthorisedOnly, async (req, res) => {
   const { username, email, password } = req.body;

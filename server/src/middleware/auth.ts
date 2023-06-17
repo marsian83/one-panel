@@ -1,6 +1,7 @@
 import { Express, Request, Response, NextFunction } from "express";
 import { getAuthToken } from "../../utils";
 import jwt from "jsonwebtoken";
+import { User } from "../types/custom";
 
 export function authorisedOnly(
   req: Request,
@@ -13,7 +14,9 @@ export function authorisedOnly(
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    req.user = user as string;
+    if (typeof user === "object") {
+      if (req.user?.id && req.user.username) req.user = user as User;
+    }
     next();
   });
 }

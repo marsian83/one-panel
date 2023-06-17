@@ -4,6 +4,7 @@ import {
   Outlet,
   Route,
   RouterProvider,
+  useLocation,
 } from "react-router-dom";
 import Footer from "./common/Footer";
 import Navbar from "./common/Navbar";
@@ -29,7 +30,7 @@ export default function App() {
 function Root() {
   useEffect(() => {
     checkAndValidateLocalToken();
-  }, []);
+  }, [useLocation()]);
 
   return (
     <main className="relative">
@@ -47,5 +48,4 @@ async function checkAndValidateLocalToken() {
       setJwt(token);
     }
   }
-  console.log(token);
 }

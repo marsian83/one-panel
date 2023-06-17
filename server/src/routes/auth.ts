@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../db";
-import { unauthorisedOnly } from "../middleware/auth";
+import { authorisedOnly, unauthorisedOnly } from "../middleware/auth";
 
 const router = express.Router();
 
@@ -27,7 +27,10 @@ const router = express.Router();
 //   );
 // });
 
-router.delete("/logout", (req, res) => {});
+router.delete("/logout", (req, res) => {
+  req.user = undefined;
+  res.sendStatus(205);
+});
 
 router.post("/login", unauthorisedOnly, async (req, res) => {
   const { username, password } = req.body;
@@ -61,6 +64,18 @@ router.post("/register", unauthorisedOnly, async (req, res) => {
   } catch (err) {
     res.status(500).send({ error: err });
   }
+});
+
+router.get("/validate", (req, res) => {
+  const { token } = req.query;
+
+  if (typeof token != "string") return res.send({ valid: false });
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {}, (err, user) => {
+    if (err) return res.send({ valid: false });
+  });
+
+  return res.status(200).send({ valid: true });
 });
 
 export default router;

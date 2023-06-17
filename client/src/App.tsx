@@ -9,6 +9,9 @@ import Footer from "./common/Footer";
 import Navbar from "./common/Navbar";
 import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
+import { useEffect } from "react";
+import { getTokenFromLocalStorage } from "./utils";
+import api, { setJwt } from "./api";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -24,6 +27,10 @@ export default function App() {
 }
 
 function Root() {
+  useEffect(() => {
+    checkAndValidateLocalToken();
+  }, []);
+
   return (
     <main className="relative">
       <Navbar />
@@ -31,4 +38,14 @@ function Root() {
       <Footer />
     </main>
   );
+}
+
+async function checkAndValidateLocalToken() {
+  const token = getTokenFromLocalStorage();
+  if (token) {
+    if (await api.validateToken(token)) {
+      setJwt(token);
+    }
+  }
+  console.log(token);
 }

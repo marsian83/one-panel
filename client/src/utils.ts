@@ -1,5 +1,5 @@
 import fs from "fs";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export function readPortFromConfig(callback: (port: number | false) => void) {
   const filePath = "../config.json";
@@ -40,4 +40,18 @@ export async function hashPassword(
     // Handle any errors during the hashing process
     throw new Error(`Error hashing password: ${error}`);
   }
+}
+
+export function saveTokenToLocalStorage(token: string) {
+  localStorage.setItem("onepanel_JWT_stored", token);
+}
+
+export function getTokenFromLocalStorage() {
+  const localCookie = localStorage.getItem("onepanel_JWT_stored");
+  if (!localCookie) return false;
+  return localCookie;
+}
+
+export function clearTokenFromLocalStorage() {
+  localStorage.removeItem("onepanel_JWT_stored");
 }

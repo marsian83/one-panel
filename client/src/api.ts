@@ -1,5 +1,6 @@
 import axios from "axios";
 import { serverUrl } from "./config";
+import { clearTokenFromLocalStorage, saveTokenToLocalStorage } from "./utils";
 
 let jwt: string | null = null;
 
@@ -21,6 +22,11 @@ export function setJwt(token: string) {
   client.defaults.headers["Authorization"] = `Bearer ${jwt}`;
 }
 
+export function clearJwt() {
+  jwt = null;
+  client.defaults.headers["Authorization"] = null;
+}
+
 const api = {
   async login(username: string, password: string) {
     const userData = (
@@ -37,13 +43,12 @@ const api = {
       throw new Error(userData.error);
     }
 
-    console.log(userData);
-    console.log(client.defaults.headers);
-
     if (userData.accessToken) {
       setJwt(userData.accessToken);
+      saveTokenToLocalStorage(userData.accessToken);
     }
   },
+
   async register(username: string, email: string, password: string) {
     const userData = (
       await client.post(
@@ -60,9 +65,30 @@ const api = {
       throw new Error(userData.error);
     }
 
-    console.log(userData);
+    if (userData.accessToken) {
+      setJwt(userData.accessToken);
+      saveTokenToLocalStorage(userData.accessToken);
+    }
   },
-  logout() {},
+
+  logout() {
+    clearTokenFromLocalStorage();
+    clearJwt();
+    client.delete("/auth/logout");
+    window.location.reload();
+  },
+
+  async validateToken(token: string) {
+    const valid = (
+      await client.get("/auth/validate", {
+        params: {
+          token: token,
+        },
+      })
+    ).data.valid;
+    return valid || false;
+  },
+
   getUserName() {},
 };
 

@@ -1,5 +1,5 @@
 import { Express, Request, Response, NextFunction } from "express";
-import { getAuthToken } from "../../utils";
+import { getAuthTokenFromHeader } from "../../utils";
 import jwt from "jsonwebtoken";
 import { User } from "../types/custom";
 
@@ -8,7 +8,7 @@ export function authorisedOnly(
   res: Response,
   next: NextFunction
 ) {
-  const token = getAuthToken(req);
+  const token = getAuthTokenFromHeader(req);
 
   if (!token) return res.sendStatus(401);
 
@@ -26,7 +26,7 @@ export function unauthorisedOnly(
   res: Response,
   next: NextFunction
 ) {
-  const token = getAuthToken(req);
+  const token = getAuthTokenFromHeader(req);
 
   if (!token) return next();
 

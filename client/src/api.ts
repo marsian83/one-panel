@@ -49,6 +49,7 @@ const api = {
       setJwt(userData.accessToken);
       saveTokenToLocalStorage(userData.accessToken);
     }
+    window.location.reload();
   },
 
   async register(username: string, email: string, password: string) {
@@ -71,6 +72,7 @@ const api = {
       setJwt(userData.accessToken);
       saveTokenToLocalStorage(userData.accessToken);
     }
+    window.location.reload();
   },
 
   async logout() {

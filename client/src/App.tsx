@@ -10,7 +10,7 @@ import Footer from "./common/Footer";
 import Navbar from "./common/Navbar";
 import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
-import { useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { getTokenFromLocalStorage } from "./utils";
 import api, { clearJwt, setJwt } from "./api";
 import ProtectedRoute, { ProtectedTypes } from "./common/ProtectedRoute";
@@ -41,7 +41,11 @@ export default function App() {
     )
   );
 
-  return <RouterProvider router={router} />;
+  return (
+    <AuthLoader>
+      <RouterProvider router={router} />;
+    </AuthLoader>
+  );
 }
 
 function Root() {
@@ -68,4 +72,14 @@ async function checkAndValidateLocalToken() {
   }
 }
 
-function AuthLoader() {}
+function AuthLoader({ children }: { children: ReactNode }) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    checkAndValidateLocalToken().then(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  return <>{loading ? <p>loading...</p> : children}</>;
+}

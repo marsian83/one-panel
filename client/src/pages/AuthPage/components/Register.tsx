@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import api from "../../../api";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const userRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -8,14 +9,17 @@ export default function Register() {
 
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   async function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    api.register(
+    await api.register(
       userRef.current.value,
       emailRef.current.value,
       passwordRef.current.value
     );
+    navigate("/dashboard");
     setLoading(false);
   }
 

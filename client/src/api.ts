@@ -49,7 +49,6 @@ const api = {
       setJwt(userData.accessToken);
       saveTokenToLocalStorage(userData.accessToken);
     }
-    window.location.reload();
   },
 
   async register(username: string, email: string, password: string) {
@@ -72,14 +71,12 @@ const api = {
       setJwt(userData.accessToken);
       saveTokenToLocalStorage(userData.accessToken);
     }
-    window.location.reload();
   },
 
   async logout() {
     await client.delete("/auth/logout");
     clearTokenFromLocalStorage();
     clearJwt();
-    window.location.reload();
   },
 
   async validateToken(token: string) {
@@ -98,6 +95,13 @@ const api = {
     const user = (await client.get("/user/name")).data;
 
     return user.username;
+  },
+
+  async getDatabases() {
+    if (!jwt) throw new Error("Unauthorized - getDatabases");
+    const databases = (await client.get("/user/databases")).data;
+
+    return databases;
   },
 };
 

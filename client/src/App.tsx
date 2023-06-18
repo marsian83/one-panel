@@ -43,7 +43,7 @@ export default function App() {
 
   return (
     <AuthLoader>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </AuthLoader>
   );
 }

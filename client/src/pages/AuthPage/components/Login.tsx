@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import api from "../../../api";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const userRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -7,10 +8,13 @@ export default function Login() {
 
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   async function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    api.login(userRef.current.value, passwordRef.current.value);
+    await api.login(userRef.current.value, passwordRef.current.value);
+    navigate("/dashboard");
     setLoading(false);
   }
 

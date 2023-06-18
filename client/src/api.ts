@@ -74,9 +74,9 @@ const api = {
   },
 
   async logout() {
+    await client.delete("/auth/logout");
     clearTokenFromLocalStorage();
     clearJwt();
-    await client.delete("/auth/logout");
     window.location.reload();
   },
 

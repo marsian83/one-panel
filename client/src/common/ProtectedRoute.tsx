@@ -1,29 +1,11 @@
-import { ReactNode, useEffect } from "react";
-import { Route, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import api from "../api";
 
-interface ProtectedRouteProps {
-  element: ReactNode;
-  path: string;
-}
+export default function ProtectedRoute() {
+  const authHeader = api.client.defaults.headers["Authorization"] as string;
+  const token = authHeader && authHeader.split(" ")[1];
 
-export default function ProtectedRoute(props: ProtectedRouteProps) {
-  const authTokenPresent = api.client.defaults.headers["Authorization"] != null;
+  const auth = token && token != "null";
 
-  return (
-    <Route
-      element={authTokenPresent ? props.element : <RedirectToAuth />}
-      path={props.path}
-    />
-  );
-}
-
-function RedirectToAuth() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate("/auth");
-  });
-
-  return <></>;
+  return auth ? <Outlet /> : <Navigate to="/auth" />;
 }

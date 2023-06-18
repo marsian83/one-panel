@@ -22,7 +22,9 @@ export default function App() {
       <Route path="/" element={<Root />}>
         <Route index element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
-        <ProtectedRoute path="/dashboard" element={<DatabasesPage />} />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DatabasesPage />} />
+        </Route>
       </Route>
     )
   );

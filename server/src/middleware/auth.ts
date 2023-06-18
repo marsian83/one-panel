@@ -14,9 +14,8 @@ export function authorisedOnly(
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    if (typeof user === "object") {
-      if (req.user?.id && req.user.username) req.user = user as User;
-    }
+    req.user = user as User;
+
     next();
   });
 }

@@ -16,7 +16,7 @@ import api, { clearJwt, setJwt } from "./api";
 import ProtectedRoute from "./common/ProtectedRoute";
 import DatabasesPage from "./pages/DatabasesPage/DatabasesPage";
 
-export default function App() {
+export default async function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Root />}>
@@ -28,6 +28,8 @@ export default function App() {
       </Route>
     )
   );
+
+  await checkAndValidateLocalToken();
 
   return <RouterProvider router={router} />;
 }

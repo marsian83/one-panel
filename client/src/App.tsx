@@ -13,7 +13,7 @@ import AuthPage from "./pages/AuthPage/AuthPage";
 import { useEffect } from "react";
 import { getTokenFromLocalStorage } from "./utils";
 import api, { clearJwt, setJwt } from "./api";
-import ProtectedRoute from "./common/ProtectedRoute";
+import ProtectedRoute, { ProtectedTypes } from "./common/ProtectedRoute";
 import DatabasesPage from "./pages/DatabasesPage/DatabasesPage";
 
 export default async function App() {
@@ -21,8 +21,20 @@ export default async function App() {
     createRoutesFromElements(
       <Route path="/" element={<Root />}>
         <Route index element={<HomePage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/" element={<ProtectedRoute />}>
+
+        {/* Public Only Routes -> Authenticated users can not visit */}
+        <Route
+          path="/"
+          element={<ProtectedRoute type={ProtectedTypes.PUBLICONLY} />}
+        >
+          <Route path="/auth" element={<AuthPage />} />
+        </Route>
+
+        {/* Private Only Routes -> Non Authenticated users can not visit */}
+        <Route
+          path="/"
+          element={<ProtectedRoute type={ProtectedTypes.PRIVATEONLY} />}
+        >
           <Route path="/dashboard" element={<DatabasesPage />} />
         </Route>
       </Route>

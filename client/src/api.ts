@@ -91,7 +91,12 @@ const api = {
     return valid || false;
   },
 
-  getUserName() {},
+  async getUserName() {
+    if (!jwt) throw new Error("Unauthorized - getUserName");
+    const user = (await client.get("/user/name")).data;
+
+    return user.username;
+  },
 };
 
 export default api;

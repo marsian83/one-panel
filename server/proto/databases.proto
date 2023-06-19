@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package databases;
+
+import "google/protobuf/empty.proto";
+
+message DB {
+    int32 id = 1;
+    string name = 2;
+    string jwt = 3;
+}
+
+service Databases {
+    rpc CreateDatabase(stream DB) returns (google.protobuf.Empty) {}
+}

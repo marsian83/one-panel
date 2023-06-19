@@ -16,6 +16,7 @@ router.post("/new", authorisedOnly, async (req, res) => {
       },
     },
   });
+
   res
     .status(200)
     .send({ message: "Created database succesfully", database: newDB });

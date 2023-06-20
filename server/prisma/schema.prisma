@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  username  String @unique
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
   email     String
   password  String
-  Databases DB[]
+  Databases Database[]
 }
 
-model DB {
+model Database {
   id          Int          @id @default(autoincrement())
   name        String
   collections Collection[]
@@ -27,7 +27,7 @@ model DB {
 }
 
 model Collection {
-  id   Int  @id @default(autoincrement())
-  DB   DB?  @relation(fields: [dBId], references: [id])
+  id   Int       @id @default(autoincrement())
+  DB   Database? @relation(fields: [dBId], references: [id])
   dBId Int?
 }

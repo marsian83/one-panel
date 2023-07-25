@@ -15,6 +15,7 @@ import { getTokenFromLocalStorage } from "./utils";
 import api, { clearJwt, setJwt } from "./api";
 import ProtectedRoute, { ProtectedTypes } from "./common/ProtectedRoute";
 import DatabasesPage from "./pages/DatabasesPage/DatabasesPage";
+import DashboardPage from "./pages/DashboardPage/DashboardPage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -33,9 +34,9 @@ export default function App() {
         {/* Private Only Routes -> Non Authenticated users can not visit */}
         <Route
           path="/"
-          element={<ProtectedRoute type={ProtectedTypes.PRIVATEONLY} />}
+          // element={<ProtectedRoute type={ProtectedTypes.PRIVATEONLY} />}
         >
-          <Route path="/dashboard" element={<DatabasesPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Route>
     )

@@ -80,11 +80,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   return (
-    <section className="p-page relative flex h-screen flex-col items-center justify-center overflow-hidden">
-      <div className="absolute left-1/2 top-0 -z-10 h-[400vh] w-[170vw] -translate-x-1/2 -translate-y-[183vh] animate-[auth-bg-glow_5000ms_infinite] bg-[radial-gradient(#00000055_1%,_transparent_56%)]" />
-      <div className="absolute left-0 top-0 -z-20 h-full w-full bg-[url('/images/auth-bg.jpg')] bg-cover" />
-      <div className="absolute left-0 top-0 -z-[18] h-full w-full bg-gradient-to-br from-primary to-secondary bg-cover opacity-10" />
-
+    <section className="p-page relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden">
       <div className="flex flex-col items-center">
         <Link to="/" className="group flex items-center gap-x-4">
           <img
@@ -115,19 +111,6 @@ export default function AuthPage() {
           </p>
         </button>
       </div>
-
-      <button
-        className="group absolute left-14 top-10 flex items-center gap-x-2 text-sm tracking-tight duration-500"
-        onClick={() => navigate(-1)}
-      >
-        <MaterialIcon
-          codepoint="e5c4"
-          className="text-3xl duration-inherit group-hover:-scale-y-100"
-        />
-        <p className="duration-inherit hover:drop-shadow-lg group-hover:translate-x-1 group-hover:scale-110">
-          Back
-        </p>
-      </button>
     </section>
   );
 }

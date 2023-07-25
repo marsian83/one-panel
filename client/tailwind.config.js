@@ -22,6 +22,12 @@ export default {
         poppins: '"Poppins", sans-serif',
         raleway: '"Raleway", sans-serif',
       },
+      zIndex: {
+        1: 1,
+      },
+      transitionDuration: {
+        inherit: "inherit",
+      },
     },
   },
   plugins: [],

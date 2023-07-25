@@ -8,12 +8,12 @@ export default {
         widescreen: { min: "780px" },
       },
       colors: {
-        primary: "",
-        secondary: "",
-        background: "",
-        foreground: "",
-        front: "",
-        back: "",
+        primary: "#0066b2",
+        secondary: "#40e0d0",
+        background: "#000000",
+        foreground: "#ebecee",
+        front: "#ffffff",
+        back: "#000000",
       },
       borderRadius: {
         inherit: "inherit",

@@ -14,8 +14,8 @@ import { ReactNode, useEffect, useState } from "react";
 import { getTokenFromLocalStorage } from "./utils";
 import api, { clearJwt, setJwt } from "./api";
 import ProtectedRoute, { ProtectedTypes } from "./common/ProtectedRoute";
-import DatabasesPage from "./pages/DatabasesPage/DatabasesPage";
 import DashboardPage from "./pages/DashboardPage/DashboardPage";
+import DatabasePage from "./pages/DatabasePage/DatabasePage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -37,9 +37,11 @@ export default function App() {
           // element={<ProtectedRoute type={ProtectedTypes.PRIVATEONLY} />}
         >
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/databases/:id" element={<DatabasePage />} />
+          <Route path="/panel/:id" element={<DatabasePage />} />
         </Route>
-      </Route>,
-    ),
+      </Route>
+    )
   );
 
   return (

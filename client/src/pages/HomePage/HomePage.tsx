@@ -14,7 +14,7 @@ export default function HomePage() {
           Dashboard
         </Link>
         <Link
-          to="/databases/1"
+          to="/databases/0"
           className="bg-primary px-4 py-1 rounded-md text-white"
         >
           Artifacts

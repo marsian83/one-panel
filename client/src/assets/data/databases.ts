@@ -1,6 +1,6 @@
 import { Database, Plan } from "../../interfaces/Data.d";
 
-const databases: Database[] = [
+const dummyDatabases: Database[] = [
   {
     id: 0,
     name: "Primary clients",
@@ -8,7 +8,7 @@ const databases: Database[] = [
     icon: {
       imageUrl: "https://shantitrip.in/favicon.ico",
     },
-    artifacts: [0, 1, 2],
+    artifacts: [0, 1, 2, 3],
     lastUpdated: Date.now() - 0.4 * 24 * 3600 * 1000,
   },
   {
@@ -42,4 +42,4 @@ const databases: Database[] = [
   },
 ];
 
-export default databases;
+export default dummyDatabases;

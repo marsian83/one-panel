@@ -2,7 +2,7 @@ import { useState } from "react";
 import MaterialIcon from "../../common/MaterialIcon";
 import { twMerge } from "tailwind-merge";
 import { Database } from "../../interfaces/Data";
-import databases from "../../assets/data/databases";
+import dummyDatabases from "../../assets/data/databases";
 import { Link } from "react-router-dom";
 import { getDateDifferenceString } from "../../utils";
 
@@ -47,7 +47,7 @@ export default function DashboardPage() {
                   codepoint={item.icon}
                   className={twMerge(
                     "p-1 rounded-md",
-                    view === item.view && "bg-foreground bg-opacity-20",
+                    view === item.view && "bg-foreground bg-opacity-20"
                   )}
                 />
               </button>
@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
         {view === "GRID" ? (
           <section className=" my-10 gap-4 grid grid-cols-3 justify-center">
-            {databases.map((database) => (
+            {dummyDatabases.map((database) => (
               <DatabaseCard
                 key={database.id}
                 className=""
@@ -85,7 +85,7 @@ function DatabaseCard(props: { database: Database; className?: string }) {
       to={`/databases/${database.id}`}
       className={twMerge(
         props.className,
-        "bg-background border border-front border-opacity-30 rounded-md p-4 relative group duration-300 hover:border-opacity-100",
+        "bg-background border border-front border-opacity-30 rounded-md p-4 relative group duration-300 hover:border-opacity-100"
       )}
     >
       <MaterialIcon

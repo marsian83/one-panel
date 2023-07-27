@@ -16,6 +16,7 @@ import api, { clearJwt, setJwt } from "./api";
 import ProtectedRoute, { ProtectedTypes } from "./common/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage/DashboardPage";
 import DatabasePage from "./pages/DatabasePage/DatabasePage";
+import PanelPage from "./pages/PanelPage/PanelPage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -38,7 +39,7 @@ export default function App() {
         >
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/databases/:id" element={<DatabasePage />} />
-          <Route path="/panel/:id" element={<DatabasePage />} />
+          <Route path="/panel/:id" element={<PanelPage />} />
         </Route>
       </Route>
     )

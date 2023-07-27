@@ -4,7 +4,7 @@ const dummyArtifacts: Artifact[] = [
   {
     id: 0,
     name: "ShantiTrip",
-    collections: [0, 1, 2, 3, 4, 5, 6, 7],
+    collections: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
     color: "#f06292",
     icon: {
       codepoint: "e539",

@@ -26,8 +26,40 @@ const dummyCollections: Collection[] = [
     name: "Newsletters",
   },
   {
-    id: 7,
+    id: 6,
     name: "Blogs",
+  },
+  {
+    id: 7,
+    name: "Articles",
+  },
+  {
+    id: 8,
+    name: "Hotels",
+  },
+  {
+    id: 9,
+    name: "Flights",
+  },
+  {
+    id: 10,
+    name: "Trains",
+  },
+  {
+    id: 11,
+    name: "Pricing",
+  },
+  {
+    id: 12,
+    name: "Applications",
+  },
+  {
+    id: 13,
+    name: "Hosts",
+  },
+  {
+    id: 14,
+    name: "Guests",
   },
 ];
 

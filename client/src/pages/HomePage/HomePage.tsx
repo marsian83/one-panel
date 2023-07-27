@@ -17,7 +17,13 @@ export default function HomePage() {
           to="/databases/0"
           className="bg-primary px-4 py-1 rounded-md text-white"
         >
-          Artifacts
+          Database
+        </Link>
+        <Link
+          to="/panel/0"
+          className="bg-primary px-4 py-1 rounded-md text-white"
+        >
+          Panel
         </Link>
       </section>
     </>

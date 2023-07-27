@@ -26,7 +26,7 @@ export function readPortFromConfig(callback: (port: number | false) => void) {
 
 export async function hashPassword(
   password: string,
-  saltRounds = 10
+  saltRounds = 10,
 ): Promise<string> {
   try {
     // Generate a salt

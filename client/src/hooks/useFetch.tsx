@@ -10,10 +10,10 @@ export default function useFetch<T>(
     initial?: T;
     callback?: Function;
     debug?: boolean;
-  }
+  },
 ) {
   const [data, setData] = useState<T | null>(
-    options && options.initial ? options.initial : null
+    options && options.initial ? options.initial : null,
   );
   const [loading, setLoading] = useState<boolean>(true);
 

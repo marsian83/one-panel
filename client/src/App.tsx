@@ -38,8 +38,8 @@ export default function App() {
         >
           <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
-      </Route>
-    )
+      </Route>,
+    ),
   );
 
   return (

@@ -47,7 +47,7 @@ export default function DashboardPage() {
                   codepoint={item.icon}
                   className={twMerge(
                     "p-1 rounded-md",
-                    view === item.view && "bg-foreground bg-opacity-20"
+                    view === item.view && "bg-foreground bg-opacity-20",
                   )}
                 />
               </button>
@@ -85,7 +85,7 @@ function DatabaseCard(props: { database: Database; className?: string }) {
       to={`/databases/${database.id}`}
       className={twMerge(
         props.className,
-        "bg-background border border-front border-opacity-30 rounded-md p-4 relative group duration-300 hover:border-opacity-100"
+        "bg-background border border-front border-opacity-30 rounded-md p-4 relative group duration-300 hover:border-opacity-100",
       )}
     >
       <MaterialIcon

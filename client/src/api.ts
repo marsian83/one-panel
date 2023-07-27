@@ -37,7 +37,7 @@ const api = {
         JSON.stringify({
           username: username,
           password: password,
-        })
+        }),
       )
     ).data;
 
@@ -59,7 +59,7 @@ const api = {
           username: username,
           email: email,
           password: password,
-        })
+        }),
       )
     ).data;
 

@@ -17,7 +17,7 @@ export default function Register() {
     await api.register(
       userRef.current.value,
       emailRef.current.value,
-      passwordRef.current.value
+      passwordRef.current.value,
     );
     navigate("/dashboard");
     setLoading(false);

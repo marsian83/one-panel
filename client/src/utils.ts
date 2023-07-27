@@ -55,3 +55,22 @@ export function getTokenFromLocalStorage() {
 export function clearTokenFromLocalStorage() {
   localStorage.removeItem("onepanel_JWT_stored");
 }
+
+export function getDateDifferenceString(unixTimestamp: number): string {
+  const now = Date.now();
+  const diffInMillis = now - unixTimestamp;
+
+  const ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+  const daysAgo = Math.floor(diffInMillis / ONE_DAY_IN_MILLIS);
+
+  if (daysAgo === 0) {
+    return "today";
+  } else if (daysAgo === 1) {
+    return "yesterday";
+  } else if (daysAgo < 31) {
+    return `${daysAgo} days ago`;
+  } else {
+    const monthsAgo = Math.floor(daysAgo / 30);
+    return `${monthsAgo} months ago`;
+  }
+}

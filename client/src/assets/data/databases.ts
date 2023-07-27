@@ -3,12 +3,12 @@ import { Database, Plan } from "../../interfaces/Data.d";
 const databases: Database[] = [
   {
     id: 0,
-    name: "testDB",
+    name: "Primary clients",
     plan: Plan.basic,
     icon: {
       imageUrl: "https://shantitrip.in/favicon.ico",
     },
-    artifacts: [],
+    artifacts: [0, 1, 2],
     lastUpdated: Date.now() - 0.4 * 24 * 3600 * 1000,
   },
   {

@@ -27,12 +27,20 @@
 }
 
 @layer components {
+  .btn {
+    @apply flex items-center;
+  }
+
   .btn-1 {
-    @apply bg-background border border-front border-opacity-20 rounded-lg before:absolute-cover relative before:bg-foreground before:bg-opacity-5 duration-300 
+    @apply btn bg-background border border-front border-opacity-20 rounded-lg before:absolute-cover relative before:bg-foreground before:bg-opacity-5 duration-300 
     hover:before:bg-opacity-[13%] before:duration-inherit tracking-tight overflow-hidden;
   }
 
   .btn-2 {
-    @apply bg-foreground text-back rounded-lg duration-300 hover:brightness-75 tracking-tight;
+    @apply btn bg-foreground text-back rounded-lg duration-300 hover:brightness-75 tracking-tight;
+  }
+
+  .btn-3 {
+    @apply btn bg-primary bg-opacity-30 text-secondary duration-300 border border-transparent hover:border-opacity-50 hover:border-front hover:bg-background hover:text-front;
   }
 }

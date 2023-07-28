@@ -13,7 +13,7 @@ export default function PanelPage() {
   );
 
   const [selectedCollection, setSelectedCollection] = useState(
-    collections[0].id
+    collections.length ? collections[0].id || null : null
   );
 
   return (
@@ -23,7 +23,7 @@ export default function PanelPage() {
           {collections.map((collection) => (
             <button
               className={twMerge(
-                "bg-foreground bg-opacity-5 text-center py-4",
+                "bg-foreground bg-opacity-5 text-center py-4 duration-300 hover:bg-opacity-20",
                 selectedCollection === collection.id &&
                   "bg-primary bg-opacity-30 text-secondary"
               )}
@@ -34,11 +34,20 @@ export default function PanelPage() {
             </button>
           ))}
         </div>
-        <button className="flex items-center gap-x-2 justify-center bg-primary text-secondary py-5 bg-opacity-20">
+        <button className="gap-x-2 justify-center btn-3 py-5">
           <MaterialIcon codepoint="e8b8" /> Settings
         </button>
       </div>
-      <div className="flex-1"></div>
+      <div className="flex-1 flex relative flex-col">
+        {true && (
+          <div className="flex justify-end pr-[10vw]">
+            <button className="px-5 py-2 btn-3 gap-x-2 rounded">
+              <MaterialIcon codepoint="ead3" />
+              Schema
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

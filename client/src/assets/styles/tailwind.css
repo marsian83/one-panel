@@ -29,7 +29,7 @@
 @layer components {
   .btn-1 {
     @apply bg-background border border-front border-opacity-20 rounded-lg before:absolute-cover relative before:bg-foreground before:bg-opacity-5 duration-300 
-    hover:before:bg-opacity-[13%] before:duration-inherit tracking-tight;
+    hover:before:bg-opacity-[13%] before:duration-inherit tracking-tight overflow-hidden;
   }
 
   .btn-2 {

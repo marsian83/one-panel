@@ -38,7 +38,7 @@ export default function DatabasePage() {
             {artifacts.map((artifact) => (
               <ArtifactCard artifact={artifact} />
             ))}
-            <button className="border-foreground border group bg-background border-opacity-40 border-dashed rounded flex flex-col justify-center items-center">
+            <button className="border-foreground border p-2 group bg-background border-opacity-40 border-dashed rounded flex flex-col justify-center items-center">
               <MaterialIcon
                 codepoint="e145"
                 className="bg-foreground bg-opacity-30 text-4xl aspect-square text-center p-1 rounded duration-300 group-hover:bg-opacity-0"

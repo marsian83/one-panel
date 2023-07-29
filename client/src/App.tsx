@@ -21,6 +21,7 @@ import useModal from "./hooks/useModal";
 import { twMerge } from "tailwind-merge";
 import { GlobalContextProvider } from "./contexts/globalContext";
 import { CacheContextProvider } from "./contexts/cacheContext";
+import SchemaPage from "./pages/SchemaPage/SchemaPage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/databases/:id" element={<DatabasePage />} />
           <Route path="/panel/:id" element={<PanelPage />} />
+          <Route path="/collection/:id/schema" element={<SchemaPage />} />
         </Route>
       </Route>
     )

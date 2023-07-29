@@ -99,3 +99,13 @@ export function isColorLight(hexColor: string): boolean {
   const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
   return luminance > 0.5;
 }
+
+function parseObjectString(inputString: string) {
+  try {
+    const parsedObject = JSON.parse(inputString);
+    return parsedObject;
+  } catch (error) {
+    console.error("Error parsing the input string:", error.message);
+    return null;
+  }
+}

@@ -26,4 +26,10 @@ export interface Artifact {
 export interface Collection {
   id: number;
   name: string;
+  schema: number;
+}
+
+export interface Schema {
+  id: number;
+  definition: { name: string; type: string }[];
 }

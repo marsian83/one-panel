@@ -36,7 +36,7 @@ export default function DatabasePage() {
           </h2>
           <div className="grid grid-cols-3 p-6 gap-6">
             {artifacts.map((artifact) => (
-              <ArtifactCard artifact={artifact} />
+              <ArtifactCard key={artifact.id} artifact={artifact} />
             ))}
             <button className="border-foreground border p-2 group bg-background border-opacity-40 border-dashed rounded flex flex-col justify-center items-center">
               <MaterialIcon

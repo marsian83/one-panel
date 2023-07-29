@@ -3,3 +3,30 @@
   inherits: false;
   initial-value: #c0ffee;
 }
+
+@keyframes loader-move {
+  0% {
+    transform: translateY(0%);
+  }
+  25% {
+    transform: translateY(-100%);
+  }
+  75% {
+    transform: translateY(+100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes loader-color-cycle {
+  from {
+    background-color: theme("colors.primary");
+  }
+  50% {
+    background-color: theme("colors.secondary");
+  }
+  to {
+    background-color: theme("colors.primary");
+  }
+}

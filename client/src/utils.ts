@@ -24,6 +24,17 @@ export function readPortFromConfig(callback: (port: number | false) => void) {
   });
 }
 
+export function getHashCodeFromStringInsecurely(str: string) {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return hash;
+}
+
+
 export async function hashPassword(
   password: string,
   saltRounds = 10
@@ -100,12 +111,33 @@ export function isColorLight(hexColor: string): boolean {
   return luminance > 0.5;
 }
 
-function parseObjectString(inputString: string) {
+export function parseObjectString(inputString: string) {
   try {
     const parsedObject = JSON.parse(inputString);
     return parsedObject;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error parsing the input string:", error.message);
     return null;
   }
+}
+
+export function str2blks_MD5(str: string) {
+  let nblk = ((str.length + 8) >> 6) + 1;
+  let blks = new Array(nblk * 16);
+  for (let i = 0; i < nblk * 16; i++) blks[i] = 0;
+  for (let i = 0; i < str.length; i++) {
+    blks[i >> 2] |= str.charCodeAt(i) << ((i % 4) * 8);
+    blks[i >> 2] |= 0x80 << ((i % 4) * 8);
+  }
+  blks[nblk * 16 - 2] = str.length * 8;
+  return blks;
+}
+
+export function rhex(num: number) {
+  var hex_chr = "0123456789abcdef";
+  let str = "";
+  for (let j = 0; j <= 3; j++)
+    str += hex_chr.charAt((num >> (j * 8 + 4)) & 0x0F) +
+      hex_chr.charAt((num >> (j * 8)) & 0x0F);
+  return str;
 }

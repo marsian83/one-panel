@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import dummyArtifacts from "../../assets/data/artifacts";
 import dummyCollections from "../../assets/data/collections";
 import MaterialIcon from "../../common/MaterialIcon";
@@ -41,10 +41,13 @@ export default function PanelPage() {
       <div className="flex-1 flex relative flex-col">
         {true && (
           <div className="flex justify-end pr-[10vw]">
-            <button className="px-5 py-2 btn-3 gap-x-2 rounded">
+            <Link
+              to={`/collection/${id}/schema`}
+              className="px-5 py-2 btn-3 gap-x-2 rounded"
+            >
               <MaterialIcon codepoint="ead3" />
               Schema
-            </button>
+            </Link>
           </div>
         )}
       </div>

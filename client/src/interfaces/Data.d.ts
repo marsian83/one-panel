@@ -31,5 +31,13 @@ export interface Collection {
 
 export interface Schema {
   id: number;
-  definition: { name: string; type: string }[];
+  definition: Definition;
 }
+
+export type Definition = {
+  name: string;
+  optional?: boolean;
+  type: Type;
+}[];
+
+export type Type = "string" | "number" | "reference" | Definition;

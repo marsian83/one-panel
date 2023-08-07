@@ -22,12 +22,14 @@ import { twMerge } from "tailwind-merge";
 import { GlobalContextProvider } from "./contexts/globalContext";
 import { CacheContextProvider } from "./contexts/cacheContext";
 import SchemaPage from "./pages/SchemaPage/SchemaPage";
+import TestSchemaPage from "./pages/TestSchemaPage/TestSchemaPage";
 
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Root />}>
         <Route index element={<HomePage />} />
+        <Route path="/test/schema" element={<TestSchemaPage />} />
 
         {/* Public Only Routes -> Authenticated users can not visit */}
         <Route

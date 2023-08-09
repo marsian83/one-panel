@@ -35,11 +35,20 @@ export class SchemaController {
     for (let entry of this.definition) {
       if (typeof entry.type === typeof this.definition) {
         const item = object[entry.name as keyof typeof object];
-        if (!(typeof item === "object" && !Array.isArray(item))) {
-        }
-
         const sc = new SchemaController();
         sc.define(entry.type as typeof this.definition);
+
+        if (!(typeof item === "object" && !Array.isArray(item))) {
+          return {
+            valid: false,
+            message: `Field ${
+              entry.name
+            } expected type ${sc.getInterfaceString()} but got type ${typeof object[
+              entry.name as keyof typeof object
+            ]}`,
+          };
+        }
+
         const result = sc.validate(item);
         const rm = result?.message as string;
         if (!result.valid) {
@@ -78,6 +87,6 @@ export class SchemaController {
       }
       interf[definition.name] = definition.type;
     });
-    return interf;
+    return JSON.stringify(interf);
   }
 }

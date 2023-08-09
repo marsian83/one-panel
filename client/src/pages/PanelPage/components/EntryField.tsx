@@ -58,9 +58,16 @@ function EntryInput(props: {
       updateNestedObject(
         [...props.nest, entry.name],
         tempObj,
-        event.target.value
+        getParsedValue(event.target.value)
       )
     );
+  }
+
+  function getParsedValue(value: string) {
+    if (entry.type === "number") {
+      return Number(value);
+    }
+    return value;
   }
 
   return (
@@ -68,6 +75,7 @@ function EntryInput(props: {
       <input
         className="border border-front border-opacity-20 w-full p-2"
         onChange={onChangeHandler}
+        type={entry.type === "number" ? "number" : "text"}
       />
     </div>
   );

@@ -43,8 +43,10 @@ export default function PanelPage() {
         </button>
       </div>
       <div className="flex-1 flex h-full overflow-y-scroll scrollbar-thin scrollbar-primary relative flex-col">
-        {true && (
-          <div className="flex justify-end pr-[10vw]">
+        <div className="flex justify-end pr-10">
+          <div className="flex"></div>
+
+          {true && (
             <Link
               to={`/collection/${id}/schema`}
               className="px-5 py-2 btn-3 gap-x-2 rounded"
@@ -52,8 +54,8 @@ export default function PanelPage() {
               <MaterialIcon codepoint="ead3" />
               Schema
             </Link>
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="pr-10">
           <EntryField

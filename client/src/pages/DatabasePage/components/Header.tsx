@@ -1,4 +1,5 @@
 import useModal from "../../../hooks/useModal";
+import EndpointsModal from "./modals/EndpointsModal";
 import GetConnectionStringModal from "./modals/GetConnectionStringModal";
 
 export default function Header(props: { name: string }) {
@@ -16,7 +17,12 @@ export default function Header(props: { name: string }) {
             Connection string
           </button>
           <button className="btn-1 px-6 py-2 font-medium">Settings</button>
-          <button className="btn-2 px-6 py-2 font-medium">Endpoints</button>
+          <button
+            className="btn-2 px-6 py-2 font-medium"
+            onClick={() => modal.show(<EndpointsModal />)}
+          >
+            Endpoints
+          </button>
         </div>
       </div>
     </section>

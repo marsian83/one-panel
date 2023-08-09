@@ -49,8 +49,8 @@ export default function App() {
           <Route path="/panel/:id" element={<PanelPage />} />
           <Route path="/collection/:id/schema" element={<SchemaPage />} />
         </Route>
-      </Route>
-    )
+      </Route>,
+    ),
   );
 
   return (
@@ -76,13 +76,13 @@ function Root() {
       <article
         className={twMerge(
           "fixed z-[9999] to-0 left-0 w-full h-full bg-opacity-20 bg-background backdrop-blur-sm flex justify-center items-center duration-300",
-          !modal.element && "opacity-0 pointer-events-none"
+          !modal.element && "opacity-0 pointer-events-none",
         )}
       >
         <div
           className={twMerge(
             "duration-inherit",
-            !modal.element && "translate-y-[100vh] scale-0"
+            !modal.element && "translate-y-[100vh] scale-0",
           )}
         >
           {modal.element}

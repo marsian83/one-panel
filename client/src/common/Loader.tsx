@@ -12,7 +12,7 @@ export default function Loader(props: LoaderProps) {
     <div
       className={twMerge(
         "flex justify-between items-center min-w-[3rem]",
-        props.className
+        props.className,
       )}
       style={{ height: circleHeight * 4 }}
     >

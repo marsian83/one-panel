@@ -26,7 +26,7 @@ export function readPortFromConfig(callback: (port: number | false) => void) {
 
 export async function hashPassword(
   password: string,
-  saltRounds = 10
+  saltRounds = 10,
 ): Promise<string> {
   try {
     // Generate a salt
@@ -76,7 +76,7 @@ export function getDateDifferenceString(unixTimestamp: number): string {
 }
 
 export function hexToRgb(
-  hex: string
+  hex: string,
 ): { r: number; g: number; b: number } | null {
   const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
   if (match) {

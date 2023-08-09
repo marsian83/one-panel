@@ -2,40 +2,12 @@ import { useRef, useState } from "react";
 import { SchemaController } from "../../helpers/schemaValidation";
 import { purifyJson } from "../../utils";
 import { twMerge } from "tailwind-merge";
-import CodeMirror from "@uiw/react-codemirror";
-import { EditorView } from "@codemirror/view";
-
-let myTheme = EditorView.theme(
-  {
-    "&": {
-      color: "white",
-      backgroundColor: "#034",
-    },
-    ".cm-content": {
-      caretColor: "#0e9",
-    },
-    "&.cm-focused .cm-cursor": {
-      borderLeftColor: "#0e9",
-    },
-    "&.cm-focused .cm-selectionBackground, ::selection": {
-      backgroundColor: "#074",
-    },
-    ".cm-gutters": {
-      backgroundColor: "#045",
-      color: "#ddd",
-      border: "none",
-    },
-  },
-  { dark: true }
-);
 
 export default function TestSchemaPage() {
   const [schema, setSchema] = useState("[]");
 
   const [schemaError, setSchemaError] = useState("");
   const [result, setResult] = useState({ valid: false, message: "" });
-
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
 
   const schemaRef = useRef() as React.MutableRefObject<any>;
   const objectRef = useRef() as React.MutableRefObject<HTMLTextAreaElement>;
@@ -75,13 +47,6 @@ export default function TestSchemaPage() {
           ref={schemaRef}
           onChange={setSchemaFromInput}
         ></textarea>
-        {/* <CodeMirror
-          className="w-11/12 h-11/12 resize-none bg-transparent text-back border"
-          onChange={setSchemaFromInput}
-          ref={schemaRef}
-          theme={myTheme}
-          lang="JSON"
-        /> */}
         <p className="absolute bottom-1 bg-background left-1 text-red-500">
           {schemaError}
         </p>
@@ -95,7 +60,7 @@ export default function TestSchemaPage() {
         <p
           className={twMerge(
             "absolute bottom-1 bg-background left-1",
-            result.valid ? "text-green-500" : "text-red-500"
+            result.valid ? "text-green-500" : "text-red-500",
           )}
         >
           {result.message}

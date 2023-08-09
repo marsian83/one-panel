@@ -34,9 +34,13 @@ export class SchemaController {
 
     for (let entry of this.definition) {
       if (typeof entry.type === typeof this.definition) {
+        const item = object[entry.name as keyof typeof object];
+        if (!(typeof item === "object" && !Array.isArray(item))) {
+        }
+
         const sc = new SchemaController();
         sc.define(entry.type as typeof this.definition);
-        const result = sc.validate(object[entry.name as keyof typeof object]);
+        const result = sc.validate(item);
         const rm = result?.message as string;
         if (!result.valid) {
           return { valid: false, message: `In ${entry.name}, ${rm}` };
@@ -46,6 +50,7 @@ export class SchemaController {
 
     for (let entry of this.definition) {
       if (
+        (object[entry.name as keyof typeof object] || !entry.optional) &&
         typeof entry.type !== typeof this.definition &&
         typeof object[entry.name as keyof typeof object] !== entry.type
       ) {

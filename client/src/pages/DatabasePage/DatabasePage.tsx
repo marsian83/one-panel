@@ -13,7 +13,7 @@ export default function DatabasePage() {
   const database = dummyDatabases.filter((db) => db.id === Number(id))[0];
 
   const artifacts = dummyArtifacts.filter((artifact) =>
-    database.artifacts.includes(artifact.id)
+    database.artifacts.includes(artifact.id),
   );
 
   return (

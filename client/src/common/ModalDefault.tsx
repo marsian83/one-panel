@@ -27,7 +27,7 @@ export default function ModalDefault(props: ModalDefaultProps) {
           className={twMerge(
             "bg-background bg-opacity-75 px-5 py-2 rounded-lg border border-front border-opacity-25 duration-300 hover:bg-opacity-50",
             props.type === "singleButtonAction" && "hidden",
-            props.type === "singleButtonClose" && "w-full"
+            props.type === "singleButtonClose" && "w-full",
           )}
           onClick={() => modal.hide()}
         >
@@ -37,7 +37,7 @@ export default function ModalDefault(props: ModalDefaultProps) {
           className={twMerge(
             "bg-foreground px-5 py-2 rounded-lg text-back duration-300 hover:brightness-75",
             props.type === "singleButtonAction" && "w-full",
-            props.type === "singleButtonClose" && "hidden"
+            props.type === "singleButtonClose" && "hidden",
           )}
           onClick={props.action}
           disabled={props.type === "disabledAction"}

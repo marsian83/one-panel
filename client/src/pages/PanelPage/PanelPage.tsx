@@ -9,11 +9,11 @@ export default function PanelPage() {
   const { id } = useParams();
   const artifact = dummyArtifacts.filter((a) => a.id === Number(id))[0];
   const collections = dummyCollections.filter((c) =>
-    artifact.collections.includes(c.id)
+    artifact.collections.includes(c.id),
   );
 
   const [selectedCollection, setSelectedCollection] = useState(
-    collections.length ? collections[0].id || null : null
+    collections.length ? collections[0].id || null : null,
   );
 
   return (
@@ -25,7 +25,7 @@ export default function PanelPage() {
               className={twMerge(
                 "bg-foreground bg-opacity-5 text-center py-4 duration-300 hover:bg-opacity-20",
                 selectedCollection === collection.id &&
-                  "bg-primary bg-opacity-30 text-secondary"
+                  "bg-primary bg-opacity-30 text-secondary",
               )}
               onClick={() => setSelectedCollection(collection.id)}
               key={collection.id}

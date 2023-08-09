@@ -28,16 +28,15 @@ export function getHashCodeFromStringInsecurely(str: string) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
     var char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return hash;
 }
 
-
 export async function hashPassword(
   password: string,
-  saltRounds = 10,
+  saltRounds = 10
 ): Promise<string> {
   try {
     // Generate a salt
@@ -87,7 +86,7 @@ export function getDateDifferenceString(unixTimestamp: number): string {
 }
 
 export function hexToRgb(
-  hex: string,
+  hex: string
 ): { r: number; g: number; b: number } | null {
   const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
   if (match) {
@@ -157,7 +156,28 @@ export function rhex(num: number) {
   var hex_chr = "0123456789abcdef";
   let str = "";
   for (let j = 0; j <= 3; j++)
-    str += hex_chr.charAt((num >> (j * 8 + 4)) & 0x0F) +
-      hex_chr.charAt((num >> (j * 8)) & 0x0F);
+    str +=
+      hex_chr.charAt((num >> (j * 8 + 4)) & 0x0f) +
+      hex_chr.charAt((num >> (j * 8)) & 0x0f);
   return str;
+}
+
+export function updateNestedObject(
+  keys: string[],
+  obj: object,
+  newValue: any
+): object {
+  if (keys.length === 1) {
+    return { ...obj, [keys[0]]: newValue };
+  }
+
+  const [currentKey, ...remainingKeys] = keys;
+  return {
+    ...obj,
+    [currentKey]: updateNestedObject(
+      remainingKeys,
+      obj[currentKey as keyof typeof obj],
+      newValue
+    ),
+  };
 }

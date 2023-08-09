@@ -17,6 +17,14 @@ const dummySchemas: Schema[] = [
         type: "string",
       },
       {
+        name: "Example",
+        type: "string",
+      },
+      {
+        name: "Interval",
+        type: "number",
+      },
+      {
         name: "Cost",
         type: "number",
       },

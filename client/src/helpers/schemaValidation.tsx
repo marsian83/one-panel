@@ -18,6 +18,7 @@ export class SchemaController {
       if (!entry.optional && !object[entry.name as keyof typeof object]) {
         return {
           valid: false,
+          erronousIndex: this.definition.indexOf(entry),
           message: `Required field ${entry.name} is not defined`,
         };
       }
@@ -41,6 +42,7 @@ export class SchemaController {
         if (!(typeof item === "object" && !Array.isArray(item))) {
           return {
             valid: false,
+            erronousIndex: this.definition.indexOf(entry),
             message: `Field ${
               entry.name
             } expected type ${sc.getInterfaceString()} but got type ${typeof object[
@@ -52,7 +54,11 @@ export class SchemaController {
         const result = sc.validate(item);
         const rm = result?.message as string;
         if (!result.valid) {
-          return { valid: false, message: `In ${entry.name}, ${rm}` };
+          return {
+            valid: false,
+            erronousIndex: this.definition.indexOf(entry),
+            message: `In ${entry.name}, ${rm}`,
+          };
         }
       }
     }
@@ -65,6 +71,7 @@ export class SchemaController {
       ) {
         return {
           valid: false,
+          erronousIndex: this.definition.indexOf(entry),
           message: `Field ${entry.name} expected type ${
             entry.type
           } but got type ${typeof object[entry.name as keyof typeof object]}`,
@@ -85,7 +92,8 @@ export class SchemaController {
       }
       if (definition.type === "reference") {
       }
-      interf[definition.name] = definition.type;
+      interf[`${definition.name}${definition.optional ? "?" : ""}`] =
+        definition.type;
     });
     return JSON.stringify(interf);
   }

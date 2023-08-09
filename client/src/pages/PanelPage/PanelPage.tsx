@@ -1,20 +1,24 @@
 import { Link, useParams } from "react-router-dom";
 import dummyArtifacts from "../../assets/data/artifacts";
 import dummyCollections from "../../assets/data/collections";
+import dummySchemas from "../../assets/data/schemas";
 import MaterialIcon from "../../common/MaterialIcon";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import EntryField from "./components/EntryField";
 
 export default function PanelPage() {
   const { id } = useParams();
   const artifact = dummyArtifacts.filter((a) => a.id === Number(id))[0];
   const collections = dummyCollections.filter((c) =>
-    artifact.collections.includes(c.id),
+    artifact.collections.includes(c.id)
   );
 
   const [selectedCollection, setSelectedCollection] = useState(
-    collections.length ? collections[0].id || null : null,
+    collections.length ? collections[0].id || 0 : 0
   );
+
+  const [newObj, setNewObj] = useState<object>({});
 
   return (
     <div className="h-[85vh] flex">
@@ -25,7 +29,7 @@ export default function PanelPage() {
               className={twMerge(
                 "bg-foreground bg-opacity-5 text-center py-4 duration-300 hover:bg-opacity-20",
                 selectedCollection === collection.id &&
-                  "bg-primary bg-opacity-30 text-secondary",
+                  "bg-primary bg-opacity-30 text-secondary"
               )}
               onClick={() => setSelectedCollection(collection.id)}
               key={collection.id}
@@ -38,7 +42,7 @@ export default function PanelPage() {
           <MaterialIcon codepoint="e8b8" /> Settings
         </button>
       </div>
-      <div className="flex-1 flex relative flex-col">
+      <div className="flex-1 flex h-full overflow-y-scroll scrollbar-thin scrollbar-primary relative flex-col">
         {true && (
           <div className="flex justify-end pr-[10vw]">
             <Link
@@ -50,6 +54,20 @@ export default function PanelPage() {
             </Link>
           </div>
         )}
+
+        <div className="pr-10">
+          <EntryField
+            schema={
+              dummySchemas.filter(
+                (s) => s.id === collections[selectedCollection].schema
+              )[0].definition
+            }
+            data={newObj}
+            setData={setNewObj}
+            nest={["data"]}
+            disableLine
+          />
+        </div>
       </div>
     </div>
   );

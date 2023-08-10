@@ -181,3 +181,18 @@ export function updateNestedObject(
     ),
   };
 }
+
+export function getNestedValue(keys: string[], obj: object) {
+  let nestedValue = obj;
+
+  for (const key of keys) {
+    if (nestedValue.hasOwnProperty(key)) {
+      nestedValue = nestedValue[key as keyof typeof nestedValue];
+    } else {
+      // Handle cases where the key doesn't exist in the object
+      return {};
+    }
+  }
+
+  return nestedValue;
+}

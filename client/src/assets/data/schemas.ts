@@ -5,11 +5,11 @@ const dummySchemas: Schema[] = [
     id: 0,
     definition: [
       {
-        name: "Name",
+        name: "name",
         type: "string",
       },
       {
-        name: "Description",
+        name: "description",
         type: "string",
       },
       {
@@ -17,26 +17,27 @@ const dummySchemas: Schema[] = [
         type: "string",
       },
       {
-        name: "Example",
+        name: "example",
         type: "string",
+        optional: true,
       },
       {
-        name: "Interval",
+        name: "interval",
         type: "number",
       },
       {
-        name: "Cost",
+        name: "cost",
         type: "number",
       },
       {
-        name: "Location",
+        name: "location",
         type: [
           { name: "latitude", type: "number" },
           { name: "longitude", type: "number" },
         ],
       },
       {
-        name: "References",
+        name: "references",
         type: "number",
       },
     ],

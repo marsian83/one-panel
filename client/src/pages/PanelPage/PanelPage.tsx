@@ -6,6 +6,7 @@ import MaterialIcon from "../../common/MaterialIcon";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import EntryField from "./components/EntryField";
+import ListView from "./components/ListView";
 
 export default function PanelPage() {
   const { id } = useParams();
@@ -19,6 +20,7 @@ export default function PanelPage() {
   );
 
   const [newObj, setNewObj] = useState<object>({});
+  const [mode, setMode] = useState<"new" | "list">("new");
 
   return (
     <div className="h-[85vh] flex">
@@ -43,8 +45,27 @@ export default function PanelPage() {
         </button>
       </div>
       <div className="flex-1 flex h-full overflow-y-scroll scrollbar-thin scrollbar-primary relative flex-col">
-        <div className="flex justify-end pr-10">
-          <div className="flex"></div>
+        <div className="flex justify-between p-10">
+          <div className="flex bg-foreground bg-opacity-10 rounded-md p-2 gap-x-2">
+            <button
+              className={twMerge(
+                "bg-background px-4 py-1",
+                mode === "new" && "bg-primary"
+              )}
+              onClick={() => setMode("new")}
+            >
+              New
+            </button>
+            <button
+              className={twMerge(
+                "bg-background px-4 py-1",
+                mode === "list" && "bg-primary"
+              )}
+              onClick={() => setMode("list")}
+            >
+              List
+            </button>
+          </div>
 
           {true && (
             <Link
@@ -57,19 +78,34 @@ export default function PanelPage() {
           )}
         </div>
 
-        <div className="pr-10">
-          <EntryField
-            schema={
-              dummySchemas.filter(
-                (s) => s.id === collections[selectedCollection].schema
-              )[0].definition
-            }
-            data={newObj}
-            setData={setNewObj}
-            nest={["data"]}
-            disableLine
-          />
-        </div>
+        {mode === "new" && (
+          <div className="pr-10">
+            <EntryField
+              schema={
+                dummySchemas.filter(
+                  (s) => s.id === collections[selectedCollection].schema
+                )[0].definition
+              }
+              data={newObj}
+              setData={setNewObj}
+              nest={[]}
+              disableLine
+            />
+          </div>
+        )}
+
+        {mode === "list" && (
+          <div className="px-10">
+            <ListView
+              schema={
+                dummySchemas.filter(
+                  (s) => s.id === collections[selectedCollection].schema
+                )[0].definition
+              }
+              collectionId={selectedCollection}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

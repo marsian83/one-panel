@@ -13,9 +13,9 @@ const dummyEntries = [
     references: 2,
   },
   {
-    name: "mumbai trip",
-    description: "This is ok",
-    imageUrl: "https://images.googleusercontent.com/paosdojn3",
+    name: "mumbai trip to goa",
+    description: "This is ok ok ok",
+    imageUrl: "https://images.googleusercontent.com/paosdojn3iue89fbui9",
     example: 22,
     interval: 234,
     cost: 21000,
@@ -26,7 +26,7 @@ const dummyEntries = [
     references: 2,
   },
   {
-    name: "mumbai trip",
+    name: "mumbai trip to delhi and goa and jupiter",
     description: "This is ok",
     imageUrl: "https://images.googleusercontent.com/paosdojn3",
     example: 22,

@@ -32,8 +32,15 @@ const dummySchemas: Schema[] = [
       {
         name: "location",
         type: [
-          { name: "latitude", type: "number" },
-          { name: "longitude", type: "number" },
+          { name: "googleMapsCode", type: "string" },
+          { name: "appleMapsCode", type: "string" },
+          {
+            name: "coordinates",
+            type: [
+              { name: "latitude", type: "number" },
+              { name: "longitude", type: "number" },
+            ],
+          },
         ],
       },
       {

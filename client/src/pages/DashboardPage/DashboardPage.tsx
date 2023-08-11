@@ -35,7 +35,7 @@ export default function DashboardPage() {
             <input
               type="text"
               placeholder="Search..."
-              className="flex-1 py-2 bg-transparent outline-none text-front text-opacity-80"
+              className="flex-1 py-2 bg-transparent outline-none focus:outline-none text-front text-opacity-80"
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
@@ -53,7 +53,7 @@ export default function DashboardPage() {
                   codepoint={item.icon}
                   className={twMerge(
                     "p-1 rounded-md",
-                    view === item.view && "bg-foreground bg-opacity-20",
+                    view === item.view && "bg-foreground bg-opacity-20"
                   )}
                 />
               </button>
@@ -72,7 +72,7 @@ export default function DashboardPage() {
           <section className="my-10 gap-4 grid grid-cols-3 justify-center">
             {dummyDatabases
               .filter((db) =>
-                db.name.toLowerCase().includes(searchQuery.toLowerCase()),
+                db.name.toLowerCase().includes(searchQuery.toLowerCase())
               )
               .map((database) => (
                 <DatabaseCard

@@ -23,6 +23,7 @@ import { GlobalContextProvider } from "./contexts/globalContext";
 import { CacheContextProvider } from "./contexts/cacheContext";
 import SchemaPage from "./pages/SchemaPage/SchemaPage";
 import TestSchemaPage from "./pages/TestSchemaPage/TestSchemaPage";
+import loader from "@monaco-editor/loader";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -49,8 +50,8 @@ export default function App() {
           <Route path="/panel/:id" element={<PanelPage />} />
           <Route path="/collection/:id/schema" element={<SchemaPage />} />
         </Route>
-      </Route>,
-    ),
+      </Route>
+    )
   );
 
   return (
@@ -71,18 +72,39 @@ function Root() {
 
   const modal = useModal();
 
+  loader.init().then((monaco) => {
+    monaco.editor.defineTheme("one-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        {
+          token: "comment",
+          foreground: "#338332",
+          fontStyle: "italic",
+        },
+        {
+          token: "bracket",
+          foreground: "#0000ff",
+        },
+      ],
+      colors: {
+        "editor.background": "#000000",
+      },
+    });
+  });
+
   return (
     <main className="relative">
       <article
         className={twMerge(
           "fixed z-[9999] to-0 left-0 w-full h-full bg-opacity-20 bg-background backdrop-blur-sm flex justify-center items-center duration-300",
-          !modal.element && "opacity-0 pointer-events-none",
+          !modal.element && "opacity-0 pointer-events-none"
         )}
       >
         <div
           className={twMerge(
             "duration-inherit",
-            !modal.element && "translate-y-[100vh] scale-0",
+            !modal.element && "translate-y-[100vh] scale-0"
           )}
         >
           {modal.element}

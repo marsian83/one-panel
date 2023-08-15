@@ -83,7 +83,19 @@ export default function DashboardPage() {
               ))}
           </section>
         ) : (
-          <section></section>
+          <section className="flex flex-col gap-y-10 my-10">
+            {dummyDatabases
+              .filter((db) =>
+                db.name.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((database) => (
+                <DatabaseCard
+                  key={database.id}
+                  className="flex-row w-full"
+                  database={database}
+                />
+              ))}
+          </section>
         )}
       </div>
     </>

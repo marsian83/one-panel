@@ -9,7 +9,7 @@ const dummyCollections: Collection[] = [
   {
     id: 1,
     name: "Places",
-    schema: 0,
+    schema: 1,
   },
   {
     id: 2,

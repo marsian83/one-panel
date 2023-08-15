@@ -49,6 +49,32 @@ const dummySchemas: Schema[] = [
       },
     ],
   },
+  {
+    id: 1,
+    definition: [
+      {
+        name: "name",
+        type: "string",
+      },
+      {
+        name: "imageUrl",
+        type: "string",
+      },
+      {
+        name: "location",
+        type: [
+          {
+            name: "latitude",
+            type: "number",
+          },
+          {
+            name: "longitude",
+            type: "number",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default dummySchemas;

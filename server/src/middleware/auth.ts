@@ -16,6 +16,8 @@ export function authorisedOnly(
     if (err) return res.sendStatus(403);
     req.user = user as User;
 
+    if (!req.user) return res.sendStatus(401);
+
     next();
   });
 }

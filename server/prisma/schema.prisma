@@ -19,11 +19,12 @@ model User {
 }
 
 model Database {
-  id        Int        @id @default(autoincrement())
-  name      String
-  plan      String
-  icon      Json
-  artifacts Artifact[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  plan        String
+  icon        Json
+  lastUpdated DateTime   @default(now())
+  artifacts   Artifact[]
 
   User   User? @relation(fields: [userId], references: [id])
   userId Int?

@@ -36,6 +36,7 @@ export default function IconSelect(props: IconSelectProps) {
           {icons.map((item) => (
             <button
               className="text-xl"
+              key={icon}
               onClick={() => {
                 setShowingOptions(false);
                 setIcon(item);

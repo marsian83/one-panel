@@ -46,7 +46,7 @@ export default function DatabaseCard(props: {
         <div className="flex-1 flex flex-col justify-between px-3">
           <h3 className="text-lg">{database.name}</h3>
           <p className="text-sm font-light text-front text-opacity-60">
-            {database.artifacts.length} Artifacts
+            {/* {database.artifacts.length} Artifacts */}
           </p>
         </div>
       </div>

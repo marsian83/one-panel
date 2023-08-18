@@ -88,14 +88,18 @@ const api = {
     icon: { codepoint?: string; imageUrl?: string }
   ) {
     if (!jwt) throw new Error("Unauthorized - newDatabase");
-    const databases = (
-      await client.post(
-        "/handle-db/database",
-        JSON.stringify({ name, plan, icon })
-      )
+    const response = (
+      await client.post("/database/new", JSON.stringify({ name, plan, icon }))
     ).data;
 
-    return databases;
+    return response;
+  },
+
+  async isBasicAllowed() {
+    if (!jwt) throw new Error("Unauthorized");
+    const allowed = (await client.get("/user/basicdb-isallowed")).data.allowed;
+
+    return allowed;
   },
 
   async getArtifacts(db: number) {

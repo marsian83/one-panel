@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MaterialIcon from "../../common/MaterialIcon";
 import { twMerge } from "tailwind-merge";
 import dummyDatabases from "../../assets/data/databases";
 import DatabaseCard from "./components/DatabaseCard";
 import useModal from "../../hooks/useModal";
 import NewDatabaseModal from "./components/NewDatabaseModal";
+import api from "../../helpers/api";
+import { Database } from "../../interfaces/Data";
 
 type View = "GRID" | "LIST";
 
 export default function DashboardPage() {
   const [view, setView] = useState<View>("GRID");
   const [searchQuery, setSearchQuery] = useState("");
+  const [databases, setDatabases] = useState<Database[]>([]);
 
   const views: { icon: string; view: View }[] = [
     { icon: "e9b0", view: "GRID" },
@@ -18,6 +21,14 @@ export default function DashboardPage() {
   ];
 
   const modal = useModal();
+
+  async function loadData() {
+    setDatabases(await api.getDatabases());
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <>
@@ -68,38 +79,45 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {view === "GRID" ? (
-          <section className="my-10 gap-4 grid grid-cols-3 justify-center">
-            {dummyDatabases
-              .filter((db) =>
-                db.name.toLowerCase().includes(searchQuery.toLowerCase())
-              )
-              .map((database) => (
-                <DatabaseCard
-                  key={database.id}
-                  className=""
-                  database={database}
-                />
-              ))}
-          </section>
+        {databases.length ? (
+          view === "GRID" ? (
+            <section className="my-10 gap-4 grid grid-cols-3 justify-center">
+              {databases
+                .filter((db) =>
+                  db.name.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                .map((database) => (
+                  <DatabaseCard
+                    key={database.id}
+                    className=""
+                    database={database}
+                  />
+                ))}
+            </section>
+          ) : (
+            <section className="flex flex-col gap-y-10 my-10">
+              {databases
+                .filter((db) =>
+                  db.name.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                .map((database) => (
+                  <DatabaseCard
+                    key={database.id}
+                    className="flex-row w-full"
+                    database={database}
+                  />
+                ))}
+            </section>
+          )
         ) : (
-          <section className="flex flex-col gap-y-10 my-10">
-            {dummyDatabases
-              .filter((db) =>
-                db.name.toLowerCase().includes(searchQuery.toLowerCase())
-              )
-              .map((database) => (
-                <DatabaseCard
-                  key={database.id}
-                  className="flex-row w-full"
-                  database={database}
-                />
-              ))}
-          </section>
+          <div className="text-center my-20">
+            <h5 className="text-xl">No databases to show</h5>
+            <p className="my-2 text-front text-opacity-75 text-sm">
+              Click Add New... to create one
+            </p>
+          </div>
         )}
       </div>
     </>
   );
 }
-
-function DatabaseListItem() {}

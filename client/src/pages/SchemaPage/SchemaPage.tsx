@@ -3,7 +3,7 @@ import dummyCollections from "../../assets/data/collections";
 import dummySchemas from "../../assets/data/schemas";
 import { useEffect, useRef, useState } from "react";
 import { SchemaController } from "../../helpers/schemaValidation";
-import { purifyJson } from "../../utils";
+import { purifyJson } from "../../helpers/utils";
 import { twMerge } from "tailwind-merge";
 import Editor from "@monaco-editor/react";
 

@@ -1,6 +1,7 @@
 import axios from "axios";
-import { serverUrl } from "./config";
+import { serverUrl } from "../config";
 import { clearTokenFromLocalStorage, saveTokenToLocalStorage } from "./utils";
+import { Database, Plan } from "../interfaces/Data";
 
 let jwt: string | null = null;
 
@@ -30,15 +31,9 @@ export function clearJwt() {
 const api = {
   client: client,
 
-  async login(username: string, password: string) {
+  async login(email: string, password: string) {
     const userData = (
-      await client.post(
-        "/auth/login",
-        JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      )
+      await client.post("/auth/login", JSON.stringify({ email, password }))
     ).data;
 
     if (userData.error) {
@@ -48,28 +43,20 @@ const api = {
     if (userData.accessToken) {
       setJwt(userData.accessToken);
       saveTokenToLocalStorage(userData.accessToken);
+      location.reload();
     }
   },
 
-  async register(username: string, email: string, password: string) {
+  async register(name: string, email: string, password: string) {
     const userData = (
       await client.post(
         "/auth/register",
-        JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-        }),
+        JSON.stringify({ name, email, password })
       )
     ).data;
 
     if (userData.error) {
       throw new Error(userData.error);
-    }
-
-    if (userData.accessToken) {
-      setJwt(userData.accessToken);
-      saveTokenToLocalStorage(userData.accessToken);
     }
   },
 
@@ -77,17 +64,6 @@ const api = {
     await client.delete("/auth/logout");
     clearTokenFromLocalStorage();
     clearJwt();
-  },
-
-  async validateToken(token: string) {
-    const valid = (
-      await client.get("/auth/validate", {
-        params: {
-          token: token,
-        },
-      })
-    ).data.valid;
-    return valid || false;
   },
 
   async getUserName() {
@@ -99,7 +75,44 @@ const api = {
 
   async getDatabases() {
     if (!jwt) throw new Error("Unauthorized - getDatabases");
-    const databases = (await client.get("/user/databases")).data;
+    const databases = (
+      await client.get<{ databases: Database[] }>("/user/databases")
+    ).data.databases;
+
+    return databases;
+  },
+
+  async newDatabase(
+    name: string,
+    plan: Plan,
+    icon: { codepoint?: string; imageUrl?: string }
+  ) {
+    if (!jwt) throw new Error("Unauthorized - newDatabase");
+    const databases = (
+      await client.post(
+        "/handle-db/database",
+        JSON.stringify({ name, plan, icon })
+      )
+    ).data;
+
+    return databases;
+  },
+
+  async getArtifacts(db: number) {
+    if (!jwt) throw new Error("Unauthorized - getArtifacts");
+    const databases = (await client.post(`/handle-db/${db}/artifact`)).data;
+
+    return databases;
+  },
+
+  async newArtifact(db: number, name: string, color: string, icon: string) {
+    if (!jwt) throw new Error("Unauthorized - postArtifact");
+    const databases = (
+      await client.post(
+        `/handle-db/${db}/artifact`,
+        JSON.stringify({ name, color, icon: { codepoint: icon } })
+      )
+    ).data;
 
     return databases;
   },

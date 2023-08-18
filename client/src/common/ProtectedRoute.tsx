@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import api from "../api";
+import api from "../helpers/api";
 
 export enum ProtectedTypes {
   PRIVATEONLY,
@@ -11,7 +11,10 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute(props: ProtectedRouteProps) {
-  const authHeader = api.client.defaults.headers["Authorization"] as string;
+  const authHeader = api.client.defaults.headers["Authorization"] as
+    | string
+    | undefined
+    | null;
   const token = authHeader && authHeader.split(" ")[1];
 
   const auth = token && token != "null";

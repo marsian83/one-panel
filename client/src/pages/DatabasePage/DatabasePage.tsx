@@ -4,7 +4,7 @@ import dummyArtifacts from "../../assets/data/artifacts";
 import Header from "./components/Header";
 import { Artifact } from "../../interfaces/Data";
 import MaterialIcon from "../../common/MaterialIcon";
-import { isColorLight } from "../../utils";
+import { isColorLight } from "../../helpers/utils";
 import dummyCollections from "../../assets/data/collections";
 
 export default function DatabasePage() {
@@ -13,7 +13,7 @@ export default function DatabasePage() {
   const database = dummyDatabases.filter((db) => db.id === Number(id))[0];
 
   const artifacts = dummyArtifacts.filter((artifact) =>
-    database.artifacts.includes(artifact.id),
+    database.artifacts.includes(artifact.id)
   );
 
   return (

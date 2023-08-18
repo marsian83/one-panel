@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Database } from "../../../interfaces/Data";
 import { twMerge } from "tailwind-merge";
 import MaterialIcon from "../../../common/MaterialIcon";
-import { getDateDifferenceString } from "../../../utils";
+import { getDateDifferenceString } from "../../../helpers/utils";
 
 export default function DatabaseCard(props: {
   database: Database;
@@ -15,7 +15,7 @@ export default function DatabaseCard(props: {
       to={`/databases/${database.id}`}
       className={twMerge(
         props.className,
-        "bg-background border border-front border-opacity-30 rounded-md p-4 relative group duration-300 hover:border-opacity-100",
+        "bg-background border border-front border-opacity-30 rounded-md p-4 relative group duration-300 hover:border-opacity-100"
       )}
     >
       <MaterialIcon

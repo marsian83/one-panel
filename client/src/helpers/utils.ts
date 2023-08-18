@@ -43,7 +43,7 @@ export async function hashPassword(
     const salt = await bcrypt.genSalt(saltRounds);
 
     // Hash the password using the generated salt
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     return hashedPassword;
   } catch (error) {

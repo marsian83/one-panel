@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { SchemaController } from "../../../helpers/schemaValidation";
 import { Definition } from "../../../interfaces/Data";
-import { getNestedValue, updateNestedObject } from "../../../utils";
+import { getNestedValue, updateNestedObject } from "../../../helpers/utils";
 
 interface EntryFieldProps {
   schema: Definition;

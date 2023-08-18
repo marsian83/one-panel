@@ -12,22 +12,46 @@ datasource db {
 
 model User {
   id        Int        @id @default(autoincrement())
-  username  String     @unique
-  email     String
+  name      String
+  email     String     @unique
   password  String
   Databases Database[]
 }
 
 model Database {
+  id        Int        @id @default(autoincrement())
+  name      String
+  plan      String
+  icon      Json
+  artifacts Artifact[]
+
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model Artifact {
   id          Int          @id @default(autoincrement())
   name        String
+  color       String
+  icon        Json
   collections Collection[]
-  User        User?        @relation(fields: [userId], references: [id])
-  userId      Int?
+
+  Database   Database? @relation(fields: [databaseId], references: [id])
+  databaseId Int?
 }
 
 model Collection {
-  id   Int       @id @default(autoincrement())
-  DB   Database? @relation(fields: [dBId], references: [id])
-  dBId Int?
+  id     Int    @id @default(autoincrement())
+  name   String
+  schema Schema @relation(fields: [schemaId], references: [id])
+
+  Artifact   Artifact? @relation(fields: [artifactId], references: [id])
+  artifactId Int?
+  schemaId   Int
+}
+
+model Schema {
+  id         Int          @id @default(autoincrement())
+  definition Json
+  Collection Collection[]
 }

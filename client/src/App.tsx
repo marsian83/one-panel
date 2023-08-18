@@ -11,8 +11,6 @@ import Navbar from "./common/Navbar";
 import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
 import { ReactNode, useEffect, useState } from "react";
-import { getTokenFromLocalStorage } from "./utils";
-import api, { clearJwt, setJwt } from "./api";
 import ProtectedRoute, { ProtectedTypes } from "./common/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage/DashboardPage";
 import DatabasePage from "./pages/DatabasePage/DatabasePage";
@@ -24,6 +22,10 @@ import { CacheContextProvider } from "./contexts/cacheContext";
 import SchemaPage from "./pages/SchemaPage/SchemaPage";
 import TestSchemaPage from "./pages/TestSchemaPage/TestSchemaPage";
 import loader from "@monaco-editor/loader";
+import api, { setJwt } from "./helpers/api";
+import { getTokenFromLocalStorage } from "./helpers/utils";
+import Loader from "./common/Loader";
+import LogoutPage from "./pages/LogoutPage/LogoutPage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -43,8 +45,9 @@ export default function App() {
         {/* Private Only Routes -> Non Authenticated users can not visit */}
         <Route
           path="/"
-          // element={<ProtectedRoute type={ProtectedTypes.PRIVATEONLY} />}
+          element={<ProtectedRoute type={ProtectedTypes.PRIVATEONLY} />}
         >
+          <Route path="/logout" element={<LogoutPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/databases/:id" element={<DatabasePage />} />
           <Route path="/panel/:id" element={<PanelPage />} />
@@ -66,10 +69,6 @@ export default function App() {
 }
 
 function Root() {
-  useEffect(() => {
-    checkAndValidateLocalToken();
-  }, [useLocation()]);
-
   const modal = useModal();
 
   loader.init().then((monaco) => {
@@ -117,24 +116,20 @@ function Root() {
   );
 }
 
-async function checkAndValidateLocalToken() {
-  const token = getTokenFromLocalStorage();
-  if (token) {
-    if (await api.validateToken(token)) {
-      return setJwt(token);
-    }
-    clearJwt();
-  }
-}
-
 function AuthLoader({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAndValidateLocalToken().then(() => {
-      setLoading(false);
-    });
+    const localToken = getTokenFromLocalStorage();
+    if (localToken) setJwt(localToken);
+    setLoading(false);
   }, []);
 
-  return <>{loading ? <p>loading...</p> : children}</>;
+  return loading ? (
+    <>
+      <Loader />
+    </>
+  ) : (
+    <>{children}</>
+  );
 }

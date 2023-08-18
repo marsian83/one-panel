@@ -10,7 +10,7 @@ import {
   getHashCodeFromStringInsecurely,
   isColorLight,
   str2blks_MD5,
-} from "../../../../utils";
+} from "../../../../helpers/utils";
 import dummyCollections from "../../../../assets/data/collections";
 import { useState } from "react";
 

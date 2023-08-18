@@ -1,83 +1,100 @@
-import { useEffect, useState } from "react";
-import MaterialIcon from "../../common/MaterialIcon";
-import AuthInput from "./components/AuthInput";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import AuthForm from "./components/AuthForm";
-
-const formTypes = {
-  login: {
-    inputs: [
-      {
-        icon: "e158",
-        name: "email",
-        placeholder: "Email Address",
-      },
-      {
-        icon: "e0da",
-        name: "password",
-        password: true,
-        showPasswordToggle: true,
-        placeholder: "Enter Password",
-      },
-      {
-        icon: "e0da",
-        name: "password",
-        password: true,
-        placeholder: "Confirm Password",
-      },
-    ],
-
-    submitAction: (data: object) => {
-      console.log(data);
-    },
-
-    toggleText: "Already have an account?",
-    toggleCTA: "Sign in",
-    toggleTo: "register",
-
-    texts: {
-      title: "Register your organization",
-      subtitle: "Designed for scaling communities",
-      btnText: "Create my account",
-    },
-  },
-
-  register: {
-    inputs: [
-      {
-        icon: "e158",
-        name: "email",
-        placeholder: "Email Address",
-      },
-      {
-        icon: "e0da",
-        name: "password",
-        password: true,
-        showPasswordToggle: true,
-        placeholder: "Enter Password",
-      },
-    ],
-
-    submitAction: (data: object) => {
-      console.log(data);
-    },
-
-    toggleText: "Don't have an account?",
-    toggleCTA: "Sign up",
-    toggleTo: "login",
-
-    texts: {
-      title: "Sign In",
-      subtitle: "Login to manage your community",
-      btnText: "Sign in",
-    },
-  },
-};
+import useModal from "../../hooks/useModal";
+import api from "../../helpers/api";
+import bcrypt from "bcryptjs";
+import { hashPassword } from "../../helpers/utils";
 
 export default function AuthPage() {
-  const [formType, setFormType] = useState(formTypes.login);
+  const modal = useModal();
 
-  const navigate = useNavigate();
+  const formTypes = {
+    login: {
+      inputs: [
+        {
+          icon: "e7fd",
+          name: "name",
+          placeholder: "Name",
+        },
+        {
+          icon: "e158",
+          name: "email",
+          placeholder: "Email Address",
+        },
+        {
+          icon: "e0da",
+          name: "password",
+          password: true,
+          showPasswordToggle: true,
+          placeholder: "Enter Password",
+        },
+        {
+          icon: "e0da",
+          name: "confirmPassword",
+          password: true,
+          placeholder: "Confirm Password",
+        },
+      ],
+
+      submitAction: (data: any) => {
+        if (data.password === data.confirmPassword) {
+          hashPassword(data.password).then((password) =>
+            api.register(data.name, data.email, password)
+          );
+        } else {
+          alert("Passwords don't match");
+        }
+      },
+
+      toggleText: "Already have an account?",
+      toggleCTA: "Sign in",
+      toggleTo: "register",
+
+      texts: {
+        title: "Register your organization",
+        subtitle: "Designed for scaling communities",
+        btnText: "Create my account",
+      },
+    },
+
+    register: {
+      inputs: [
+        {
+          icon: "e158",
+          name: "email",
+          placeholder: "Email Address",
+        },
+        {
+          icon: "e0da",
+          name: "password",
+          password: true,
+          showPasswordToggle: true,
+          placeholder: "Enter Password",
+        },
+      ],
+
+      submitAction: (data: any) => {
+        if (data.email && data.password) {
+          api.login(data.email, data.password);
+        } else {
+          alert("Input all fields");
+        }
+      },
+
+      toggleText: "Don't have an account?",
+      toggleCTA: "Sign up",
+      toggleTo: "login",
+
+      texts: {
+        title: "Sign In",
+        subtitle: "Login to manage your community",
+        btnText: "Sign in",
+      },
+    },
+  };
+
+  const [formType, setFormType] = useState(formTypes.login);
 
   return (
     <section className="p-page relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden">

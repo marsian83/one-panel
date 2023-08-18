@@ -1,25 +1,24 @@
 {
   "scripts": {
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "migrateDev": "prisma migrate && yarn add -D prisma@latest && yarn add @prisma/client@latest"
   },
   "dependencies": {
-    "@prisma/client": "^4.15.0",
+    "@prisma/client": "^5.1.1",
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
-    "@grpc/grpc-js": "^1.8.15",
-    "@grpc/proto-loader": "^0.7.7",
-    "@types/express": "^4.17.17",
-    "@types/google-protobuf": "^3.15.6",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.3.1",
-    "grpc-tools": "^1.12.4",
     "nodemon": "^2.0.22",
-    "prisma": "^4.15.0",
+    "prisma": "^5.1.1",
     "typescript": "^5.0.4"
   }
 }

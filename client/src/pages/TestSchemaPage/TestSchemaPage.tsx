@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { SchemaController } from "../../helpers/schemaValidation";
-import { purifyJson } from "../../utils";
+import { purifyJson } from "../../helpers/utils";
 import { twMerge } from "tailwind-merge";
 
 export default function TestSchemaPage() {
@@ -60,7 +60,7 @@ export default function TestSchemaPage() {
         <p
           className={twMerge(
             "absolute bottom-1 bg-background left-1",
-            result.valid ? "text-green-500" : "text-red-500",
+            result.valid ? "text-green-500" : "text-red-500"
           )}
         >
           {result.message}

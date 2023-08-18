@@ -2,6 +2,7 @@ import {
   FormEvent,
   FormEventHandler,
   MouseEventHandler,
+  useEffect,
   useState,
 } from "react";
 import AuthInput from "./AuthInput";
@@ -20,11 +21,20 @@ interface AuthFormProps {
 
 export default function AuthForm(props: AuthFormProps) {
   const [formData, setFormData] = useState<object>({});
+  const [renderFlag, setRenderFlag] = useState(true);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     props.submitAction(formData);
   };
+
+  useEffect(() => {
+    setFormData({});
+    setRenderFlag(false);
+    setTimeout(() => {
+      setRenderFlag(true);
+    }, 2);
+  }, [props.inputs]);
 
   return (
     <form
@@ -34,21 +44,22 @@ export default function AuthForm(props: AuthFormProps) {
       <h1 className="text-2xl">{props.texts.title}</h1>
       <h1 className="text-front text-opacity-80">{props.texts.subtitle}</h1>
 
-      <div className="mt-5 flex flex-col gap-y-4">
-        {props.inputs.map((input, key) => (
-          <AuthInput
-            key={key}
-            {...input}
-            onChange={(event) => {
-              setFormData((prev) => ({
-                ...prev,
-                [input.name]: event.target.value,
-              }));
-            }}
-          />
-        ))}
-      </div>
-
+      {renderFlag && (
+        <div className="mt-5 flex flex-col gap-y-4">
+          {props.inputs.map((input, key) => (
+            <AuthInput
+              key={key}
+              {...input}
+              onChange={(event) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  [input.name]: event.target.value,
+                }));
+              }}
+            />
+          ))}
+        </div>
+      )}
       <button className="my-6 rounded-md bg-primary py-4 text-sm duration-300 hover:-translate-y-1 hover:bg-secondary hover:shadow-lg">
         {props.texts.btnText}
       </button>

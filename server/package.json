@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "nodemon index.ts",
-    "migrateDev": "prisma migrate && yarn remove prisma@latest && yarn remove @prisma/client@latest && yarn add -D prisma@latest && yarn add @prisma/client@latest"
+    "migrateDev": "prisma migrate dev && prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",

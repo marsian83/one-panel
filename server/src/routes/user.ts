@@ -15,10 +15,14 @@ router.get("/databases", authorisedOnly, async (req, res) => {
 
   const user = await prisma.user.findFirst({
     where: { id: req.user.id },
-    include: { Databases: true },
+    include: { Databases: { include: { artifacts: true } } },
   });
+
   if (!user) return res.sendStatus(403);
-  res.status(200).send({ databases: user.Databases });
+
+  const databases = user.Databases;
+
+  res.status(200).send({ databases });
 });
 
 router.get("/basicdb-isallowed", authorisedOnly, async (req, res) => {

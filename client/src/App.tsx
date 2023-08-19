@@ -26,6 +26,7 @@ import api, { setJwt } from "./helpers/api";
 import { getTokenFromLocalStorage } from "./helpers/utils";
 import Loader from "./common/Loader";
 import LogoutPage from "./pages/LogoutPage/LogoutPage";
+import ArtifactSettingsPage from "./pages/ArtifactSettingsPage/ArtifactSettingsPage";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -52,6 +53,10 @@ export default function App() {
           <Route path="/databases/:id" element={<DatabasePage />} />
           <Route path="/panel/:id" element={<PanelPage />} />
           <Route path="/collection/:id/schema" element={<SchemaPage />} />
+          <Route
+            path="/artifact/:id/settings"
+            element={<ArtifactSettingsPage />}
+          />
         </Route>
       </Route>
     )

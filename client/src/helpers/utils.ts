@@ -196,3 +196,23 @@ export function getNestedValue(keys: string[], obj: object) {
 
   return nestedValue;
 }
+
+export function convertISTToUnix(ist: string) {
+  const istDateString = ist;
+
+  const istDate = new Date(istDateString);
+
+  const istOffsetHours = 5;
+  const istOffsetMinutes = 30;
+
+  const localDate = new Date(
+    istDate.getUTCFullYear(),
+    istDate.getUTCMonth(),
+    istDate.getUTCDate(),
+    istDate.getUTCHours() - istOffsetHours,
+    istDate.getUTCMinutes() - istOffsetMinutes,
+    istDate.getUTCSeconds()
+  );
+
+  return localDate.getTime();
+}

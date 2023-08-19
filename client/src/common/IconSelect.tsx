@@ -1,12 +1,18 @@
 import { twMerge } from "tailwind-merge";
-import { icons } from "../assets/data/icons";
+import { Icon, icons } from "../assets/data/icons";
 import MaterialIcon from "./MaterialIcon";
 import { useEffect, useRef, useState } from "react";
 import useClickOutside from "../hooks/useClickOutside";
 
 interface IconSelectProps {
   className?: string;
-  iconState: [string, React.Dispatch<React.SetStateAction<string>>];
+  iconState: [
+    string,
+    (
+      | React.Dispatch<React.SetStateAction<Icon>>
+      | React.Dispatch<React.SetStateAction<string>>
+    ),
+  ];
 }
 
 export default function IconSelect(props: IconSelectProps) {
@@ -27,6 +33,7 @@ export default function IconSelect(props: IconSelectProps) {
         type="text"
         className="w-full h-full outline-none border-none focus:border-none focus:outline-none"
         value={icon}
+        readOnly
       />
       {showingOptions && (
         <div

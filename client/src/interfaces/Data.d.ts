@@ -1,3 +1,6 @@
+import { Color } from "../assets/data/colors";
+import { Icon } from "../assets/data/icons";
+
 export enum Plan {
   basic = "BASIC",
   omega = "OMEGA",
@@ -8,25 +11,25 @@ export interface Database {
   id: number;
   name: string;
   plan: Plan;
-  icon: { codepoint?: string; imageUrl?: string };
-  artifacts: number[];
-  lastUpdated: number;
+  icon: { codepoint?: Icon; imageUrl?: string };
+  artifacts: Artifact[];
+  lastUpdated: string;
 }
 
 export interface Artifact {
   id: number;
   name: string;
-  color: string;
+  color: Color;
   icon: {
-    codepoint: string;
+    codepoint: Icon;
   };
-  collections: number[];
+  collections: { id: number; name: string }[];
 }
 
 export interface Collection {
   id: number;
   name: string;
-  schema: number;
+  schema?: Definition;
 }
 
 export interface Schema {

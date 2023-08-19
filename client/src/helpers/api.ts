@@ -1,7 +1,9 @@
 import axios from "axios";
 import { serverUrl } from "../config";
 import { clearTokenFromLocalStorage, saveTokenToLocalStorage } from "./utils";
-import { Database, Plan } from "../interfaces/Data";
+import { Artifact, Collection, Database, Plan } from "../interfaces/Data";
+import { Color, colors } from "../assets/data/colors";
+import { Icon, icons } from "../assets/data/icons";
 
 let jwt: string | null = null;
 
@@ -82,14 +84,40 @@ const api = {
     return databases;
   },
 
+  async getDatabase(dbId: number) {
+    if (!jwt) throw new Error("Unauthorized - getDatabases");
+    const database = (
+      await client.get<{ database: Database }>(`/database/${dbId}`)
+    ).data.database;
+
+    return database;
+  },
+
   async newDatabase(
     name: string,
     plan: Plan,
-    icon: { codepoint?: string; imageUrl?: string }
+    icon: { codepoint?: Icon; imageUrl?: string }
   ) {
     if (!jwt) throw new Error("Unauthorized - newDatabase");
     const response = (
       await client.post("/database/new", JSON.stringify({ name, plan, icon }))
+    ).data;
+
+    return response;
+  },
+
+  async newArtifact(
+    dbId: number,
+    name: string,
+    color: Color,
+    icon: { codepoint: Icon }
+  ) {
+    if (!jwt) throw new Error("Unauthorized - newDatabase");
+    const response = (
+      await client.post(
+        `/database/${dbId}/artifact`,
+        JSON.stringify({ name, color, icon })
+      )
     ).data;
 
     return response;
@@ -102,23 +130,29 @@ const api = {
     return allowed;
   },
 
-  async getArtifacts(db: number) {
+  async getArtifact(id: number) {
     if (!jwt) throw new Error("Unauthorized - getArtifacts");
-    const databases = (await client.post(`/handle-db/${db}/artifact`)).data;
 
-    return databases;
+    const artifact = (
+      await client.get<{ artifact: Artifact & { collections: Collection[] } }>(
+        `/artifact/${id}`
+      )
+    ).data.artifact;
+
+    return artifact;
   },
 
-  async newArtifact(db: number, name: string, color: string, icon: string) {
-    if (!jwt) throw new Error("Unauthorized - postArtifact");
-    const databases = (
-      await client.post(
-        `/handle-db/${db}/artifact`,
-        JSON.stringify({ name, color, icon: { codepoint: icon } })
+  async newCollection(artifactId: number, name: string) {
+    if (!jwt) throw new Error("Unauthorized - newCollection");
+
+    const response = (
+      await client.post<{ message: string; collection: Collection }>(
+        `/artifact/${artifactId}/collection`,
+        JSON.stringify({ name })
       )
     ).data;
 
-    return databases;
+    return response;
   },
 };
 

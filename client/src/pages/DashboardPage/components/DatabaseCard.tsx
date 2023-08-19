@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { Database } from "../../../interfaces/Data";
 import { twMerge } from "tailwind-merge";
 import MaterialIcon from "../../../common/MaterialIcon";
-import { getDateDifferenceString } from "../../../helpers/utils";
+import {
+  convertISTToUnix,
+  getDateDifferenceString,
+} from "../../../helpers/utils";
 
 export default function DatabaseCard(props: {
   database: Database;
@@ -46,13 +49,14 @@ export default function DatabaseCard(props: {
         <div className="flex-1 flex flex-col justify-between px-3">
           <h3 className="text-lg">{database.name}</h3>
           <p className="text-sm font-light text-front text-opacity-60">
-            {/* {database.artifacts.length} Artifacts */}
+            {database.artifacts.length} Artifacts
           </p>
         </div>
       </div>
 
       <p className="text-sm mt-6 text-front text-opacity-60">
-        Updated {getDateDifferenceString(database.lastUpdated)}
+        Updated{" "}
+        {getDateDifferenceString(convertISTToUnix(database.lastUpdated))}
       </p>
     </Link>
   );

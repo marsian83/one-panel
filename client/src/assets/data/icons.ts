@@ -1,5 +1,4 @@
 export const icons = [
-  "e5c5",
   "e873",
   "e1db",
   "e5c4",
@@ -110,4 +109,6 @@ export const icons = [
   "e0c2",
   "e0c3",
   "e0c4",
-];
+] as const;
+
+export type Icon = (typeof icons)[number];

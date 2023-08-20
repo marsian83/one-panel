@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import MaterialIcon from "../../../common/MaterialIcon";
 import { Collection } from "../../../interfaces/Data";
 
@@ -5,22 +6,34 @@ interface CollectionCardProps {
   collection: Collection;
 }
 
-const options = [
-  { icon: "e89e", tooltip: "Open panel" },
-  { icon: "e3c9", tooltip: "Rename" },
-  { icon: "ead3", tooltip: "Edit Schema" },
-  { icon: "e872", tooltip: "Delete", color: "#bb1a1a" },
-];
-
 export default function CollectionCard(props: CollectionCardProps) {
   const { collection } = props;
+
+  const navigate = useNavigate();
+
+  const options = [
+    { icon: "e89e", tooltip: "Open panel" },
+    { icon: "e3c9", tooltip: "Rename" },
+    {
+      icon: "ead3",
+      tooltip: "Edit Schema",
+      action: () => {
+        navigate(`/collection/${collection.id}/schema`);
+      },
+    },
+    { icon: "e872", tooltip: "Delete", color: "#bb1a1a" },
+  ];
 
   return (
     <div className="border border-front border-opacity-[15%] rounded-md">
       <h5 className="text-center py-3">{collection.name}</h5>
       <div className="rounded-b-inherit p-3 bg-foreground bg-opacity-10 justify-evenly flex">
         {options.map((option, key) => (
-          <button key={key} className="relative group">
+          <button
+            key={key}
+            className="relative group"
+            onClick={option.action || function () {}}
+          >
             <MaterialIcon
               style={option.color ? { color: option.color } : {}}
               codepoint={option.icon}

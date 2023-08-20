@@ -132,3 +132,57 @@ export class SchemaController {
     return JSON.stringify(interf);
   }
 }
+
+type ValidationError = string;
+export function checkValidDefinition(arr: any[]): ValidationError[] | true {
+  const errors: ValidationError[] = [];
+
+  if (!Array.isArray(arr)) {
+    errors.push("Input is not an array.");
+    return errors;
+  }
+
+  for (const item of arr) {
+    if (!item || typeof item !== "object") {
+      errors.push("Each item must be an object.");
+      continue;
+    }
+
+    if (typeof item.name !== "string" || !item.type) {
+      errors.push("Each item must have a 'name' and 'type' property.");
+    }
+
+    if (item.optional !== undefined && typeof item.optional !== "boolean") {
+      errors.push("The 'optional' property must be a boolean.");
+    }
+
+    if (item.array !== undefined && typeof item.array !== "boolean") {
+      errors.push("The 'array' property must be a boolean.");
+    }
+
+    if (
+      item.type !== "string" &&
+      item.type !== "number" &&
+      item.type !== "reference" &&
+      !Array.isArray(item.type)
+    ) {
+      errors.push("Invalid 'type' property value.");
+    }
+
+    if (
+      item.type === "reference" &&
+      (typeof item.refers !== "string" || !item.refers)
+    ) {
+      errors.push("The 'refers' property must be a non-empty string.");
+    }
+
+    if (Array.isArray(item.type)) {
+      const nestedErrors = checkValidDefinition(item.type);
+      if (nestedErrors !== true) {
+        errors.push(...nestedErrors);
+      }
+    }
+  }
+
+  return errors.length ? errors : true;
+}

@@ -136,8 +136,10 @@ export function purifyJson(impureJson: string) {
     .replace(/(['"])?([a-z0-9A-Z_]+)(['"])?\s*:/g, '"$2": ')
 
     // Turn "@colon@" back into ":"
-    .replace(/@colon@/g, ":");
+    .replace(/@colon@/g, ":")
 
+    // Remove leading and trailing whitespaces
+    .trim();
   return pureJson;
 }
 export function str2blks_MD5(str: string) {
@@ -219,4 +221,8 @@ export function convertISTToUnix(ist: string) {
 
 export function deepCopy<T>(source: T) {
   return JSON.parse(JSON.stringify(source)) as T;
+}
+
+export function equateObjects(a: object, b: object) {
+  return JSON.stringify(a) === JSON.stringify(b);
 }

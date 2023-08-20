@@ -191,6 +191,19 @@ const api = {
 
     return collection;
   },
+
+  async updateCollection(id: number, data: { name?: string; schema?: string }) {
+    if (!jwt) throw new Error("Unauthorized - newCollection");
+
+    const response = (
+      await client.put<{ message: string; collection: Collection }>(
+        `/collection/${id}`,
+        JSON.stringify({ ...data })
+      )
+    ).data;
+
+    return response;
+  },
 };
 
 export default api;

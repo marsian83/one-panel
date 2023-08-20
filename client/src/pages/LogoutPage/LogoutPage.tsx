@@ -7,7 +7,7 @@ export default function LogoutPage() {
 
   async function logout() {
     await api.logout();
-    navigate("/");
+    navigate("/auth");
   }
 
   useEffect(() => {

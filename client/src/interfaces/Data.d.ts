@@ -33,7 +33,6 @@ export interface Collection {
 }
 
 export interface Schema {
-  id: number;
   definition: Definition;
 }
 

@@ -181,6 +181,16 @@ const api = {
 
     return response;
   },
+
+  async getCollection(id: number) {
+    if (!jwt) throw new Error("Unauthorized - newCollection");
+
+    const collection = (
+      await client.get<{ collection: Collection }>(`/collection/${id}`)
+    ).data.collection;
+
+    return collection;
+  },
 };
 
 export default api;

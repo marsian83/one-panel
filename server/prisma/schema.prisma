@@ -44,7 +44,7 @@ model Artifact {
 model Collection {
   id     Int    @id @default(autoincrement())
   name   String
-  schema Json   @default("{}")
+  schema Json   @default("[]")
 
   Artifact   Artifact? @relation(fields: [artifactId], references: [id])
   artifactId Int?

@@ -97,7 +97,7 @@ function ArtifactCard(props: { artifact: Artifact }) {
       </div>
       <p className="mt-4 duration-inherit truncate text-sm text-front text-opacity-75 pr-[10%]">
         {!artifact.collections.length && "No collections"}
-        {artifact.collections.join(", ")}
+        {artifact.collections.map((c) => c.name).join(", ")}
       </p>
     </Link>
   );

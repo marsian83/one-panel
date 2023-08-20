@@ -83,7 +83,7 @@ export default function PanelPage() {
 
             {true && (
               <Link
-                to={`/collection/${id}/schema`}
+                to={`/collection/${selectedCollection}/schema`}
                 className="px-5 py-2 btn-3 gap-x-2 rounded"
               >
                 <MaterialIcon codepoint="ead3" />

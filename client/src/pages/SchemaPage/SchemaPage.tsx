@@ -6,21 +6,19 @@ import { SchemaController } from "../../helpers/schemaValidation";
 import { purifyJson } from "../../helpers/utils";
 import { twMerge } from "tailwind-merge";
 import Editor from "@monaco-editor/react";
+import { Collection, Schema } from "../../interfaces/Data";
+import api from "../../helpers/api";
 
 export default function SchemaPage() {
   const { id } = useParams();
+  const [collection, setCollection] = useState<Collection>();
 
-  const collection = dummyCollections.filter((c) => c.id === Number(id))[0];
-  const schemaObj = dummySchemas.filter((s) => s.id === collection.schema)[0];
-
-  const [schema, setSchema] = useState(JSON.stringify(schemaObj.definition));
+  const [schema, setSchema] = useState("[]");
 
   const [schemaError, setSchemaError] = useState("");
   const [result, setResult] = useState({ valid: false, message: "" });
 
-  const schemaRef = useRef() as React.MutableRefObject<any>;
-  const objectRef = useRef() as React.MutableRefObject<HTMLTextAreaElement>;
-
+  // Schema Handlers
   const sc = new SchemaController();
 
   function setSchemaFromValue(value?: string) {
@@ -48,6 +46,17 @@ export default function SchemaPage() {
     setResult(result);
   }
 
+  // loadData
+  async function loadData() {
+    const collection = await api.getCollection(Number(id));
+    setCollection(collection);
+    setSchema(JSON.stringify(collection.schema));
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <div className="h-[80vh] flex p-page">
       <div className="basis-1/2 flex relative justify-center">
@@ -55,7 +64,7 @@ export default function SchemaPage() {
           className="w-11/12 h-11/12 resize-none bg-transparent border"
           theme="one-dark"
           language="json"
-          defaultValue={JSON.stringify(schemaObj.definition, null, 2)}
+          defaultValue={schema}
           onChange={setSchemaFromValue}
         />
         <p className="absolute bottom-1 bg-background left-1 text-red-500">

@@ -11,11 +11,12 @@ export class SchemaController {
     this.definition = definition;
   }
 
-  validate(object: object) {
+  validate(object: { [key in (typeof this.definition)[number]["name"]]: any }) {
     const keys = this.definition.map((d) => d.name);
 
+    // Check if all required fields are present
     for (let entry of this.definition) {
-      if (!entry.optional && !object[entry.name as keyof typeof object]) {
+      if (!entry.optional && !object[entry.name]) {
         return {
           valid: false,
           erronousIndex: this.definition.indexOf(entry),
@@ -24,6 +25,7 @@ export class SchemaController {
       }
     }
 
+    // Check if any extra invalid fields are present
     for (let key of Object.keys(object)) {
       if (!keys.includes(key)) {
         return {
@@ -33,12 +35,27 @@ export class SchemaController {
       }
     }
 
+    // Check if array type matches
+    for (let entry of this.definition) {
+      if (entry.array && !Array.isArray(object[entry.name])) {
+        return {
+          valid: false,
+          erronousIndex: this.definition.indexOf(entry),
+          message: `Field ${entry.name} expected Array of type ${
+            entry.type
+          } but got type ${typeof object[entry.name]}`,
+        };
+      }
+    }
+
+    // Recursive validation for nested fields
     for (let entry of this.definition) {
       if (typeof entry.type === typeof this.definition) {
-        const item = object[entry.name as keyof typeof object];
+        const item = object[entry.name];
         const sc = new SchemaController();
         sc.define(entry.type as typeof this.definition);
 
+        // Check if a required object is present as non array
         if (!(typeof item === "object" && !Array.isArray(item))) {
           return {
             valid: false,
@@ -46,11 +63,12 @@ export class SchemaController {
             message: `Field ${
               entry.name
             } expected type ${sc.getInterfaceString()} but got type ${typeof object[
-              entry.name as keyof typeof object
+              entry.name
             ]}`,
           };
         }
 
+        // Validate nested items
         const result = sc.validate(item);
         const rm = result?.message as string;
         if (!result.valid) {
@@ -63,18 +81,19 @@ export class SchemaController {
       }
     }
 
+    // Validate Types for non object entries
     for (let entry of this.definition) {
       if (
-        (object[entry.name as keyof typeof object] || !entry.optional) &&
+        (object[entry.name] || !entry.optional) &&
         typeof entry.type !== typeof this.definition &&
-        typeof object[entry.name as keyof typeof object] !== entry.type
+        typeof object[entry.name] !== entry.type
       ) {
         return {
           valid: false,
           erronousIndex: this.definition.indexOf(entry),
           message: `Field ${entry.name} expected type ${
             entry.type
-          } but got type ${typeof object[entry.name as keyof typeof object]}`,
+          } but got type ${typeof object[entry.name]}`,
         };
       }
     }

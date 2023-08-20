@@ -39,7 +39,9 @@ export interface Schema {
 export type Definition = {
   name: string;
   optional?: boolean;
+  array?: boolean;
   type: Type;
+  refers?: string;
 }[];
 
 export type Type = "string" | "number" | "reference" | Definition;

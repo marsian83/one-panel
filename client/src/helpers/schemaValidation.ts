@@ -1,4 +1,5 @@
 import { Schema } from "../interfaces/Data";
+import { deepCopy } from "./utils";
 
 export class SchemaController {
   definition: Schema["definition"];
@@ -12,18 +13,8 @@ export class SchemaController {
   }
 
   validate(object: { [key in (typeof this.definition)[number]["name"]]: any }) {
-    const keys = this.definition.map((d) => d.name);
-
-    // Check if all required fields are present
-    for (let entry of this.definition) {
-      if (!entry.optional && !object[entry.name]) {
-        return {
-          valid: false,
-          erronousIndex: this.definition.indexOf(entry),
-          message: `Required field ${entry.name} is not defined`,
-        };
-      }
-    }
+    const definition = deepCopy(this.definition);
+    const keys = definition.map((d) => d.name);
 
     // Check if any extra invalid fields are present
     for (let key of Object.keys(object)) {
@@ -35,31 +26,56 @@ export class SchemaController {
       }
     }
 
-    // Check if array type matches
-    for (let entry of this.definition) {
+    // Check if all required fields are present
+    for (let entry of definition) {
+      if (entry.type === "reference") entry.type = "number";
+
+      if (!entry.optional && !object[entry.name]) {
+        return {
+          valid: false,
+          erronousIndex: definition.indexOf(entry),
+          message: `Required field ${entry.name} is not defined`,
+        };
+      }
+
+      // Check if array type matches
       if (entry.array && !Array.isArray(object[entry.name])) {
         return {
           valid: false,
-          erronousIndex: this.definition.indexOf(entry),
+          erronousIndex: definition.indexOf(entry),
           message: `Field ${entry.name} expected Array of type ${
             entry.type
           } but got type ${typeof object[entry.name]}`,
         };
       }
-    }
 
-    // Recursive validation for nested fields
-    for (let entry of this.definition) {
-      if (typeof entry.type === typeof this.definition) {
+      const iterArr = object[entry.name] as Array<any>;
+
+      for (let ei = 0; ei < iterArr.length; ei++) {
+        if (typeof iterArr[ei] !== entry.type) {
+          return {
+            valid: false,
+            erronousIndex: definition.indexOf(entry),
+            message: `Field ${entry.name} expected Array of type ${
+              entry.type
+            } but got entry ${iterArr[ei]} at index ${ei} as ${typeof iterArr[
+              ei
+            ]}`,
+          };
+        }
+      }
+
+      // Recursive validation for nested fields
+      if (typeof entry.type === typeof definition) {
         const item = object[entry.name];
         const sc = new SchemaController();
-        sc.define(entry.type as typeof this.definition);
+        sc.define(entry.type as typeof definition);
 
         // Check if a required object is present as non array
         if (!(typeof item === "object" && !Array.isArray(item))) {
           return {
             valid: false,
-            erronousIndex: this.definition.indexOf(entry),
+            erronousIndex: definition.indexOf(entry),
             message: `Field ${
               entry.name
             } expected type ${sc.getInterfaceString()} but got type ${typeof object[
@@ -74,23 +90,22 @@ export class SchemaController {
         if (!result.valid) {
           return {
             valid: false,
-            erronousIndex: this.definition.indexOf(entry),
+            erronousIndex: definition.indexOf(entry),
             message: `In ${entry.name}, ${rm}`,
           };
         }
       }
-    }
 
-    // Validate Types for non object entries
-    for (let entry of this.definition) {
+      // Validate Types for non object entries
       if (
         (object[entry.name] || !entry.optional) &&
-        typeof entry.type !== typeof this.definition &&
+        !entry.array &&
+        typeof entry.type !== typeof definition &&
         typeof object[entry.name] !== entry.type
       ) {
         return {
           valid: false,
-          erronousIndex: this.definition.indexOf(entry),
+          erronousIndex: definition.indexOf(entry),
           message: `Field ${entry.name} expected type ${
             entry.type
           } but got type ${typeof object[entry.name]}`,

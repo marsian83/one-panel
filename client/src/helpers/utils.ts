@@ -216,3 +216,7 @@ export function convertISTToUnix(ist: string) {
 
   return localDate.getTime();
 }
+
+export function deepCopy<T>(source: T) {
+  return JSON.parse(JSON.stringify(source)) as T;
+}

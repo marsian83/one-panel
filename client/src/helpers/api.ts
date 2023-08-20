@@ -10,14 +10,41 @@ let jwt: string | null = null;
 let client = createApi();
 
 function createApi() {
-  return axios.create({
+  const client = axios.create({
     baseURL: serverUrl,
-    timeout: 5000,
+    timeout: 32000,
     headers: {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",
     },
   });
+
+  // Request Middleware
+  client.interceptors.request.use(
+    function (config) {
+      // Config before Request
+      return config;
+    },
+    function (err) {
+      // If Request error
+      console.error(err);
+      return Promise.reject(err);
+    }
+  );
+
+  // Response Middleware
+  client.interceptors.response.use(
+    function (res) {
+      if (res.data.invalidToken) api.logout();
+      return res;
+    },
+    function (error) {
+      // Do something with response error
+      return Promise.reject(error);
+    }
+  );
+
+  return client;
 }
 
 export function setJwt(token: string) {

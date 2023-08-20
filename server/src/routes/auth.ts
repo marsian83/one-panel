@@ -6,9 +6,16 @@ import bcrypt from "bcrypt";
 
 const router = express.Router();
 
-router.delete("/logout", (req, res) => {
-  req.user = undefined;
-  res.sendStatus(205);
+router.get("/validate", (req, res) => {
+  const { token } = req.query;
+
+  if (typeof token != "string") return res.send({ valid: false });
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {}, (err, user) => {
+    if (err) return res.send({ valid: false });
+  });
+
+  return res.status(200).send({ valid: true });
 });
 
 router.post("/login", unauthorisedOnly, async (req, res) => {
@@ -32,7 +39,7 @@ router.post("/login", unauthorisedOnly, async (req, res) => {
     expiresIn: "20h",
   });
 
-  res.status(200).json({ accessToken: accessToken });
+  res.status(201).json({ accessToken: accessToken });
 });
 
 router.post("/register", unauthorisedOnly, async (req, res) => {
@@ -42,22 +49,15 @@ router.post("/register", unauthorisedOnly, async (req, res) => {
     const user = await prisma.user.create({
       data: { name, email, password },
     });
-    res.status(200).send(user);
+    res.status(201).send(user);
   } catch (err) {
     res.status(500).send({ error: err });
   }
 });
 
-router.get("/validate", (req, res) => {
-  const { token } = req.query;
-
-  if (typeof token != "string") return res.send({ valid: false });
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {}, (err, user) => {
-    if (err) return res.send({ valid: false });
-  });
-
-  return res.status(200).send({ valid: true });
+router.delete("/logout", (req, res) => {
+  req.user = undefined;
+  res.sendStatus(205);
 });
 
 export default router;

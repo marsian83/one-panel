@@ -44,7 +44,7 @@ router.post("/new", authorisedOnly, async (req, res) => {
   });
 
   res
-    .status(200)
+    .status(201)
     .send({ message: "Created database succesfully", database: newDB });
 });
 
@@ -57,11 +57,13 @@ router.post("/:id/artifact", authorisedOnly, async (req, res) => {
   const { name, color, icon } = req.body;
   if (!(name && color && icon.codepoint)) return res.sendStatus(400);
 
-  const db = await prisma.artifact.create({
+  const artifact = await prisma.artifact.create({
     data: { color, icon, name, Database: { connect: { id } } },
   });
 
-  res.status(200).send({ database: db });
+  res
+    .status(201)
+    .send({ message: "Created artifact succesfully", artifact: artifact });
 });
 
 export default router;

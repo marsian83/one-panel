@@ -50,7 +50,7 @@ router.post("/:id/collection", authorisedOnly, async (req, res) => {
     },
   });
 
-  return res.status(200).send({
+  return res.status(201).send({
     message: "Created Collection Successfully",
     collection: collection,
   });

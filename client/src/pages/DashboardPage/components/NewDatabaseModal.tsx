@@ -57,9 +57,13 @@ export default function NewDatabaseModal() {
           className="border border-front border-opacity-30 capitalize px-2 py-1 rounded-md"
         >
           {(Object.keys(Plan) as (keyof typeof Plan)[]).map(
-            (plan) =>
+            (plan, key) =>
               (plan != "basic" || basicAllowed) && (
-                <option value={plan} className="capitalize text-black">
+                <option
+                  key={key}
+                  value={plan}
+                  className="capitalize text-black"
+                >
                   {plan}
                 </option>
               )

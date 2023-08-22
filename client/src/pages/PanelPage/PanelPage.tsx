@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import dummySchemas from "../../assets/data/schemas";
 import MaterialIcon from "../../common/MaterialIcon";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import EntryField from "./components/EntryField";
 import ListView from "./components/ListView";
@@ -18,6 +18,7 @@ export default function PanelPage() {
   const [selectedCollection, setSelectedCollection] = useState<number>();
   const [newObj, setNewObj] = useState<object>({});
   const [mode, setMode] = useState<"new" | "list">("new");
+  const [erronous, setErronous] = useState(true);
 
   async function loadData() {
     const artifact = await api.getArtifact(Number(id));
@@ -114,6 +115,7 @@ export default function PanelPage() {
                   data={newObj}
                   setData={setNewObj}
                   nest={[]}
+                  setErronous={setErronous}
                   disableLine
                 />
               </div>
@@ -128,12 +130,61 @@ export default function PanelPage() {
               </div>
             )}
 
-            <button className="btn-3 px-8 py-2 mt-8 self-center rounded">
-              Add Entry
-            </button>
+            <div className="relative self-center mt-8">
+              <button
+                className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+                disabled={!erronous}
+              >
+                Add Entry
+              </button>
+              {!erronous && (
+                <div className="absolute z-1 top-0 left-0 w-full h-full group cursor-not-allowed">
+                  <ErrorTooltip className="hidden group-hover:block" />
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+function ErrorTooltip(props: { className?: string }) {
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+
+  const ref = useRef() as React.MutableRefObject<HTMLParagraphElement>;
+
+  let swapX = false;
+  let swapY = false;
+  function attachToMouse(event: MouseEvent) {
+    const rect = ref.current.getBoundingClientRect();
+    swapX = window.innerWidth < rect.right + (swapX ? rect.width : 0);
+    swapY = window.innerHeight < rect.bottom + (swapY ? rect.height : 0);
+
+    setPosition({
+      top: event.y - (swapY ? rect.height : 0),
+      left: event.x - (swapX ? rect.width : 0),
+    });
+  }
+
+  useEffect(() => {
+    window.addEventListener("mousemove", attachToMouse);
+
+    return () => window.removeEventListener("mousemove", attachToMouse);
+  }, []);
+
+  return (
+    <p
+      className={twMerge(
+        "fixed w-[25vw] bg-background text-red-300 py-2 px-3 duration-100 text-sm",
+        props.className
+      )}
+      ref={ref}
+      style={position}
+    >
+      Please fix all errors before being able to insert new entries <br /> Refer
+      to docs if you need help
+    </p>
   );
 }

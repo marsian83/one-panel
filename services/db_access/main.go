@@ -1,28 +1,27 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/marsian83/one-panel/services/db_access/src/db"
+	"fmt"
 
-	"github.com/spf13/viper"
+	"github.com/gin-gonic/gin"
+	"github.com/marsian83/one-panel/services/db_access/configs"
+	"github.com/marsian83/one-panel/services/db_access/src/mongodb"
+	"github.com/marsian83/one-panel/services/db_access/src/routes"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func main() {
-	viper.SetConfigFile("./pkg/common/envs/.env")
-	viper.ReadInConfig()
+var dbClient *mongo.Client
 
-	port := viper.Get("PORT").(string)
-	dbUrl := viper.Get("DB_URL").(string)
+func main() {
+	configs.InitEnvConfigs()
+
+	port := configs.Env.Port
 
 	router := gin.Default()
-	h := db.Connect(dbUrl)
+	dbClient = mongodb.GetClient()
 
-	h.Database("")
+	router.POST("/allocate", routes.AllotDatabase)
+	router.GET("/ping", routes.Ping)
 
-	router.GET("/new", getBooks)
-	router.POST("/books", createBook)
-	router.GET("/books/:id", bookByID)
-	router.PATCH("/checkout", checkboutBook)
-
-	router.Run(port)
+	router.Run(fmt.Sprintf(":%s", port))
 }

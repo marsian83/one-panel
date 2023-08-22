@@ -141,14 +141,16 @@ function ErrorTooltip(props: { className?: string }) {
 
   const ref = useRef() as React.MutableRefObject<HTMLParagraphElement>;
 
-  let swap = false;
+  let swapX = false;
+  let swapY = false;
   function attachToMouse(event: MouseEvent) {
     const rect = ref.current.getBoundingClientRect();
-    swap = window.innerWidth < rect.right + (swap ? rect.width : 0);
+    swapX = window.innerWidth < rect.right + (swapX ? rect.width : 0);
+    swapY = window.innerHeight < rect.bottom + (swapY ? rect.height : 0);
 
     setPosition({
-      top: event.y + window.innerHeight / 90,
-      left: event.x - (swap ? rect.width : 0),
+      top: event.y - (swapY ? rect.height : 0),
+      left: event.x - (swapX ? rect.width : 0),
     });
   }
 

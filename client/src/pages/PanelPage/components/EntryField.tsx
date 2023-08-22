@@ -13,6 +13,7 @@ interface EntryFieldProps {
   setData: React.Dispatch<React.SetStateAction<object>>;
   disableLine?: boolean;
   nest: string[];
+  setErronous?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function EntryField(props: EntryFieldProps) {
@@ -25,6 +26,7 @@ export default function EntryField(props: EntryFieldProps) {
   useEffect(() => {
     const result = sc.validate(getNestedValue(props.nest, props.data));
     setValidationResult(result);
+    if (props.setErronous) props.setErronous(result.valid);
   }, [props.data]);
 
   return (

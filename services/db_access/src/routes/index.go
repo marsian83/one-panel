@@ -23,6 +23,7 @@ func AllotDatabase(c *gin.Context) {
 	}
 
 	mongodb_hostname := configs.Env.Mongodb_Hostname
+	fmt.Print(mongodb_hostname)
 
 	var userRequest UserRequest
 	if err := c.BindJSON(&userRequest); err != nil {
@@ -46,6 +47,6 @@ func AllotDatabase(c *gin.Context) {
 	})
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("User created for %s in %s", userRequest.UserName, userRequest.DBName),
+		"message": fmt.Sprintf("User %s created for database %s", userRequest.UserName, userRequest.DBName),
 		"uri":     fmt.Sprintf("mongodb://%s:%s@%s/%s", userRequest.UserName, userRequest.Password, mongodb_hostname, userRequest.DBName)})
 }

@@ -27,7 +27,6 @@ func GetClient() *mongo.Client {
 		}
 
 		dbClient = client
-
 	})
 
 	return dbClient

@@ -23,5 +23,6 @@ func main() {
 	router.POST("/allocate", routes.AllotDatabase)
 	router.GET("/ping", routes.Ping)
 
+	fmt.Printf("ok see here %s\n", configs.Env.Mongodb_Hostname)
 	router.Run(fmt.Sprintf(":%s", port))
 }

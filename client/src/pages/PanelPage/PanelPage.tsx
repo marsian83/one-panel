@@ -109,7 +109,7 @@ export default function PanelPage() {
         {selectedCollection && collection && (
           <div className="flex flex-col">
             {mode === "new" && (
-              <div className="pr-10">
+              <div className="pr-10 flex flex-col">
                 <EntryField
                   schema={collection.schema}
                   data={newObj}
@@ -118,6 +118,21 @@ export default function PanelPage() {
                   setErronous={setErronous}
                   disableLine
                 />
+                {collection.schema.length > 0 && (
+                  <div className="relative self-center mt-8">
+                    <button
+                      className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+                      disabled={!erronous}
+                    >
+                      Add Entry
+                    </button>
+                    {!erronous && (
+                      <div className="absolute z-1 top-0 left-0 w-full h-full group cursor-not-allowed">
+                        <ErrorTooltip className="hidden group-hover:block" />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -129,20 +144,6 @@ export default function PanelPage() {
                 />
               </div>
             )}
-
-            <div className="relative self-center mt-8">
-              <button
-                className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
-                disabled={!erronous}
-              >
-                Add Entry
-              </button>
-              {!erronous && (
-                <div className="absolute z-1 top-0 left-0 w-full h-full group cursor-not-allowed">
-                  <ErrorTooltip className="hidden group-hover:block" />
-                </div>
-              )}
-            </div>
           </div>
         )}
       </div>

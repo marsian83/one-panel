@@ -49,19 +49,21 @@ export class SchemaController {
         };
       }
 
-      const iterArr = object[entry.name] as Array<any>;
+      if (entry.array) {
+        const iterArr = object[entry.name] as Array<any>;
 
-      for (let ei = 0; ei < iterArr.length; ei++) {
-        if (typeof iterArr[ei] !== entry.type) {
-          return {
-            valid: false,
-            erronousIndex: definition.indexOf(entry),
-            message: `Field ${entry.name} expected Array of type ${
-              entry.type
-            } but got entry ${iterArr[ei]} at index ${ei} as ${typeof iterArr[
-              ei
-            ]}`,
-          };
+        for (let ei = 0; ei < iterArr.length; ei++) {
+          if (typeof iterArr[ei] !== entry.type) {
+            return {
+              valid: false,
+              erronousIndex: definition.indexOf(entry),
+              message: `Field ${entry.name} expected Array of type ${
+                entry.type
+              } but got entry ${iterArr[ei]} at index ${ei} as ${typeof iterArr[
+                ei
+              ]}`,
+            };
+          }
         }
       }
 
@@ -136,6 +138,7 @@ export class SchemaController {
 type ValidationError = string;
 export function checkValidDefinition(arr: any[]): ValidationError[] | true {
   const errors: ValidationError[] = [];
+  const encounteredNames: Set<string> = new Set(); // Keep track of encountered names
 
   if (!Array.isArray(arr)) {
     errors.push("Input is not an array.");
@@ -143,6 +146,22 @@ export function checkValidDefinition(arr: any[]): ValidationError[] | true {
   }
 
   for (const item of arr) {
+    if (!item || typeof item !== "object") {
+      errors.push("Each item must be an object.");
+      continue;
+    }
+
+    if (typeof item.name !== "string" || !item.type) {
+      errors.push("Each item must have a 'name' and 'type' property.");
+    } else {
+      // Check if the name is already encountered on the same level
+      if (encounteredNames.has(item.name)) {
+        errors.push("Each name must be unique on the same level.");
+      } else {
+        encounteredNames.add(item.name);
+      }
+    }
+
     if (!item || typeof item !== "object") {
       errors.push("Each item must be an object.");
       continue;

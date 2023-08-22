@@ -3,4 +3,6 @@ export const frontendUrl =
     ? "localhost:5173"
     : process.env.FRONTEND_URL;
 
+export const servicesBaseUrl = "http://127.0.0.1";
+
 const allowedOrigins = [frontendUrl];

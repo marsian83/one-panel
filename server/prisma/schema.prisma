@@ -23,6 +23,7 @@ model Database {
   name        String
   plan        String
   icon        Json
+  uri         String     @unique
   lastUpdated DateTime   @default(now())
   artifacts   Artifact[]
 

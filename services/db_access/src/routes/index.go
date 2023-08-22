@@ -48,5 +48,6 @@ func AllotDatabase(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("User %s created for database %s", userRequest.UserName, userRequest.DBName),
+		"code":    0,
 		"uri":     fmt.Sprintf("mongodb://%s:%s@%s/%s", userRequest.UserName, userRequest.Password, mongodb_hostname, userRequest.DBName)})
 }

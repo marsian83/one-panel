@@ -1,6 +1,9 @@
 import express from "express";
 import { authorisedOnly } from "../middleware/auth";
 import { prisma } from "../../db";
+import { sha256 } from "../helpers/sha256";
+import axios from "axios";
+import { Service } from "../types/microservices";
 
 const router = express.Router();
 
@@ -30,6 +33,27 @@ router.post("/new", authorisedOnly, async (req, res) => {
   if (!(name && plan && (icon.codepoint || icon.imageUrl)))
     return res.sendStatus(400);
 
+  const mongodb_username = `one${req.user.id.toString()}`.replace(" ", "");
+  const mongodb_passwd = sha256(
+    (req.user.id + req.user.username.length + Math.random() * 2e26).toString()
+  );
+  const mongodb_dbname = `onelot${req.user.id}_${name}`.replace(" ", "");
+
+  const dbResponse = await axios.post(
+    `${Service.DB_ACCESS}/allocate`,
+    JSON.stringify({
+      db_name: mongodb_dbname,
+      username: mongodb_username,
+      password: mongodb_passwd,
+    })
+  );
+
+  if (dbResponse.data.code != 0) {
+    return res
+      .status(500)
+      .send({ message: "Failed to allocate database on mongoDB instance" });
+  }
+
   const newDB = await prisma.database.create({
     data: {
       name,
@@ -40,6 +64,7 @@ router.post("/new", authorisedOnly, async (req, res) => {
       },
       plan,
       icon,
+      uri: dbResponse.data.uri,
     },
   });
 

@@ -11,7 +11,7 @@ router.get("/validate", (req, res) => {
 
   if (typeof token != "string") return res.send({ valid: false });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {}, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {}, (err, _) => {
     if (err) return res.send({ valid: false });
   });
 

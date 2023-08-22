@@ -14,6 +14,11 @@ export default function PanelPage() {
     Artifact & { collections: Collection[] }
   >();
 
+  const [collection, setCollection] = useState<Collection | null>();
+  const [selectedCollection, setSelectedCollection] = useState<number>();
+  const [newObj, setNewObj] = useState<object>({});
+  const [mode, setMode] = useState<"new" | "list">("new");
+
   async function loadData() {
     const artifact = await api.getArtifact(Number(id));
     setArtifact(artifact);
@@ -23,10 +28,17 @@ export default function PanelPage() {
     loadData();
   }, []);
 
-  const [selectedCollection, setSelectedCollection] = useState<number>();
+  async function loadSelectedCollection() {
+    setCollection(null);
+    if (selectedCollection) {
+      const c = await api.getCollection(selectedCollection);
+      setCollection(c);
+    }
+  }
 
-  const [newObj, setNewObj] = useState<object>({});
-  const [mode, setMode] = useState<"new" | "list">("new");
+  useEffect(() => {
+    loadSelectedCollection();
+  }, [selectedCollection]);
 
   return (
     <div className="h-[85vh] flex">
@@ -93,34 +105,34 @@ export default function PanelPage() {
           </div>
         )}
 
-        {/* {mode === "new" && (
-          <div className="pr-10">
-            <EntryField
-              schema={
-                dummySchemas.filter(
-                  (s) => s.id === collections[selectedCollection].schema
-                )[0].definition
-              }
-              data={newObj}
-              setData={setNewObj}
-              nest={[]}
-              disableLine
-            />
+        {selectedCollection && collection && (
+          <div className="flex flex-col">
+            {mode === "new" && (
+              <div className="pr-10">
+                <EntryField
+                  schema={collection.schema}
+                  data={newObj}
+                  setData={setNewObj}
+                  nest={[]}
+                  disableLine
+                />
+              </div>
+            )}
+
+            {mode === "list" && (
+              <div className="px-10">
+                <ListView
+                  schema={collection.schema}
+                  collectionId={selectedCollection}
+                />
+              </div>
+            )}
+
+            <button className="btn-3 px-8 py-2 mt-8 self-center rounded">
+              Add Entry
+            </button>
           </div>
         )}
-
-        {mode === "list" && (
-          <div className="px-10">
-            <ListView
-              schema={
-                dummySchemas.filter(
-                  (s) => s.id === collections[selectedCollection].schema
-                )[0].definition
-              }
-              collectionId={selectedCollection}
-            />
-          </div>
-        )} */}
       </div>
     </div>
   );

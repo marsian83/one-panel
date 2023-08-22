@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import dummyCollections from "../../assets/data/collections";
 import dummySchemas from "../../assets/data/schemas";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -11,6 +11,7 @@ import { twMerge } from "tailwind-merge";
 import Editor from "@monaco-editor/react";
 import { Collection, Definition, Schema } from "../../interfaces/Data";
 import api from "../../helpers/api";
+import MaterialIcon from "../../common/MaterialIcon";
 
 export default function SchemaPage() {
   const { id } = useParams();
@@ -68,56 +69,70 @@ export default function SchemaPage() {
     loadData();
   }, []);
 
-  return (
-    <div className="h-[80vh] flex p-page">
-      <div className="basis-1/2 flex relative justify-center">
-        {schema ? (
-          <Editor
-            className="w-11/12 h-11/12 resize-none bg-transparent border"
-            theme="one-dark"
-            language="json"
-            defaultValue={schema}
-            onChange={verifySchema}
-            onMount={(editor) => {
-              setTimeout(() => {
-                editor.getAction("editor.action.formatDocument").run();
-              }, 69);
-            }}
-          />
-        ) : (
-          "Loading..."
-        )}
-      </div>
+  const navigate = useNavigate();
 
-      <div className="basis-1/2 flex flex-col">
-        <div
-          className={twMerge(
-            "bg-background p-5 flex-1",
-            result.valid ? "text-green-500" : "text-red-500"
-          )}
+  return (
+    <>
+      <section className="p-page">
+        <button
+          onClick={() => navigate(-1)}
+          className="btn-1 gap-x-2 my-5 w-max px-5 py-1"
         >
-          {result.message.split("\n").map((line, key) => (
-            <p key={key}>{line}</p>
-          ))}
+          <MaterialIcon codepoint="e5c4" /> <p>Back</p>
+        </button>
+      </section>
+      <div className="h-[80vh] flex p-page">
+        <div className="basis-1/2 flex relative justify-center">
+          {schema ? (
+            <>
+              <Editor
+                className="w-11/12 h-11/12 resize-none bg-transparent border"
+                theme="one-dark"
+                language="json"
+                defaultValue={schema}
+                onChange={verifySchema}
+                onMount={(editor) => {
+                  setTimeout(() => {
+                    editor.getAction("editor.action.formatDocument").run();
+                  }, 69);
+                }}
+              />
+            </>
+          ) : (
+            "Loading..."
+          )}
         </div>
-        <div className="py-5 flex justify-center">
-          <div className="relative">
-            <button
-              className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
-              disabled={!result.valid}
-              onClick={updateSchema}
-            >
-              Update Schema
-            </button>
-            {!result.valid && (
-              <div className="absolute z-1 top-0 left-0 w-full h-full group cursor-not-allowed">
-                <ErrorTooltip className="hidden group-hover:block" />
-              </div>
+
+        <div className="basis-1/2 flex flex-col">
+          <div
+            className={twMerge(
+              "bg-background p-5 flex-1",
+              result.valid ? "text-green-500" : "text-red-500"
             )}
+          >
+            {result.message.split("\n").map((line, key) => (
+              <p key={key}>{line}</p>
+            ))}
+          </div>
+          <div className="py-5 flex justify-center">
+            <div className="relative">
+              <button
+                className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+                disabled={!result.valid}
+                onClick={updateSchema}
+              >
+                Update Schema
+              </button>
+              {!result.valid && (
+                <div className="absolute z-1 top-0 left-0 w-full h-full group cursor-not-allowed">
+                  <ErrorTooltip className="hidden group-hover:block" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

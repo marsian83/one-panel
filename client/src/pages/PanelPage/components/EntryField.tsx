@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { SchemaController } from "../../../helpers/schemaValidation";
 import { Definition } from "../../../interfaces/Data";
-import { getNestedValue, updateNestedObject } from "../../../helpers/utils";
+import {
+  deepCopy,
+  getNestedValue,
+  updateNestedObject,
+} from "../../../helpers/utils";
 
 interface EntryFieldProps {
   schema: Definition;
@@ -67,13 +71,18 @@ function EntryInput(props: {
 }) {
   const { entry, setData } = props;
 
+  const [newArr, setNewArr] = useState<Array<any>>([]);
+
   function onChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
-    const tempObj = JSON.parse(JSON.stringify(props.data));
+    const tempObj = deepCopy(props.data);
+
+    setNewArr((n) => [...n, getParsedValue(event.target.value)]);
+
     setData(
       updateNestedObject(
         [...props.nest, entry.name],
         tempObj,
-        getParsedValue(event.target.value)
+        entry.array ? newArr : getParsedValue(event.target.value)
       )
     );
   }
@@ -82,6 +91,11 @@ function EntryInput(props: {
     if (entry.type === "number") {
       return Number(value);
     }
+
+    if (entry.array) {
+      return newArr;
+    }
+
     return value;
   }
 

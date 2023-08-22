@@ -19,8 +19,9 @@ export default function ListView(props: ListViewProps) {
   return (
     <div className="flex flex-col">
       <div className="grid gap-2 w-max grid-cols-5">
-        {schema.map((item) => (
+        {schema.map((item, key) => (
           <label
+            key={key}
             htmlFor={item.name}
             className="flex gap-x-2 cursor-pointer bg-foreground bg-opacity-[13%] rounded-full px-3 py-1"
           >
@@ -44,12 +45,12 @@ export default function ListView(props: ListViewProps) {
       <table className="flex-1 mt-10">
         <thead>
           <tr>
-            {Object.keys(content[0]).map((item) =>
+            {Object.keys(content[0]).map((item, key) =>
               visibility[item as keyof typeof visibility] ? (
-                <th className="border h-16 font-medium">{item}</th>
-              ) : (
-                <></>
-              )
+                <th className="border h-16 font-medium" key={key}>
+                  {item}
+                </th>
+              ) : null
             )}
           </tr>
         </thead>
@@ -60,9 +61,9 @@ export default function ListView(props: ListViewProps) {
                 key={key}
                 className="relative h-10 hover:bg-secondary hover:bg-opacity-30 cursor-pointer"
               >
-                {Object.keys(content[0]).map((item) =>
+                {Object.keys(content[0]).map((item, key) =>
                   visibility[item as keyof typeof visibility] ? (
-                    <td className="border pl-2">
+                    <td className="border pl-2" key={key}>
                       {JSON.stringify(val[item as keyof typeof val])}
                     </td>
                   ) : (

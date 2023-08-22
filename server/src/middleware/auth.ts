@@ -13,11 +13,11 @@ export function authorisedOnly(
   if (!token) return res.sendStatus(401);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.status(205).send({ invalidToken: true });
+    if (err) return res.status(200).send({ invalidToken: true });
 
     req.user = user as User;
 
-    if (!req.user) return res.status(205).send({ invalidToken: true });
+    if (!req.user) return res.status(200).send({ invalidToken: true });
 
     next();
   });

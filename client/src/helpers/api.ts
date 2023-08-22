@@ -2,8 +2,8 @@ import axios from "axios";
 import { serverUrl } from "../config";
 import { clearTokenFromLocalStorage, saveTokenToLocalStorage } from "./utils";
 import { Artifact, Collection, Database, Plan } from "../interfaces/Data";
-import { Color, colors } from "../assets/data/colors";
-import { Icon, icons } from "../assets/data/icons";
+import { Color } from "../assets/data/colors";
+import { Icon } from "../assets/data/icons";
 
 let jwt: string | null = null;
 
@@ -35,7 +35,9 @@ function createApi() {
   // Response Middleware
   client.interceptors.response.use(
     function (res) {
-      if (res.data.invalidToken) api.logout();
+      if (res.data.invalidToken) {
+        api.logout();
+      }
       return res;
     },
     function (error) {
@@ -104,6 +106,7 @@ const api = {
 
   async getDatabases() {
     if (!jwt) throw new Error("Unauthorized - getDatabases");
+
     const databases = (
       await client.get<{ databases: Database[] }>("/user/databases")
     ).data.databases;

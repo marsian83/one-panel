@@ -29,7 +29,7 @@ export interface Artifact {
 export interface Collection {
   id: number;
   name: string;
-  schema?: Definition;
+  schema: Definition;
 }
 
 export interface Schema {

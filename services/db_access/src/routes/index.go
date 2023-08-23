@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -61,13 +60,15 @@ func NewEntry(c *gin.Context) {
 		Artifact   string `json:"artifact"`
 		Collection string `json:"collection"`
 		Data       string `json:"data"`
-		Type       string `json:"type"`
-		Object     string `json:"object	"`
 	}
 
 	type Entry struct {
-		Name string
-		Data interface{}
+		Name string `bson:"name"`
+		Data []struct {
+			ID   int         `json:"id"`
+			Item interface{} `json:"item"`
+		} `bson:"data"`
+		NextID int `bson:"next_id"`
 	}
 
 	mongodb_hostname := configs.Env.Mongodb_Hostname
@@ -89,25 +90,13 @@ func NewEntry(c *gin.Context) {
 	var newData interface{}
 	var err error
 
-	if userRequest.Object == "1" {
-		// If Object field is set, parse the JSON data
-		err = json.Unmarshal([]byte(userRequest.Object), &newData)
+	if true {
+		// Parse Data -> Unmarshal JSON
+		err = json.Unmarshal([]byte(userRequest.Data), &newData)
 		if err != nil {
-			fmt.Println("Error parsing JSON:", err)
+			msg := fmt.Sprintf("Error parsing JSON: %s", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": msg})
 			return
-		}
-	} else {
-		// Otherwise, use the data as-is based on the specified type
-		switch userRequest.Type {
-		case "number":
-			newData, err = strconv.Atoi(userRequest.Data)
-			if err != nil {
-				fmt.Println("Error converting to number:", err)
-				return
-			}
-		default:
-			// Default case: use data as string
-			newData = userRequest.Data
 		}
 	}
 
@@ -115,20 +104,35 @@ func NewEntry(c *gin.Context) {
 
 	err = collection.FindOne(ctx, bson.M{"name": userRequest.Collection}).Decode(&existingEntry)
 
+	var nextID int
+
 	if err == nil {
 		// Entry exists, update its value
-		update := bson.M{"$set": bson.M{"data": userRequest.Data}}
-		_, err := collection.UpdateOne(ctx, bson.M{"name": userRequest.Collection}, update)
-
-		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "Error updating value",
-				"code":    1})
-		}
+		nextID = existingEntry.NextID
 	} else {
-		// Entry doesn't exist, insert a new one
-		newEntry := Entry{Name: userRequest.Collection, Data: newData}
-		_, err = collection.InsertOne(ctx, newEntry)
+		nextID = 0
+	}
+
+	newEntry := struct {
+		ID   int         `json:"id"`
+		Item interface{} `json:"item"`
+	}{
+		ID:   nextID,
+		Item: newData,
+	}
+
+	update := bson.M{
+		"$push": bson.M{"data": newEntry},
+		"$set":  bson.M{"next_id": nextID + 1},
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"name": userRequest.Collection}, update)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Error updating value",
+			"code":    1})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

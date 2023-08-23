@@ -1,6 +1,8 @@
 import express from "express";
 import { authorisedOnly } from "../middleware/auth";
 import { prisma } from "../../db";
+import axios from "axios";
+import { Service } from "../types/microservices";
 const router = express.Router();
 
 router.get("/:id", authorisedOnly, async (req, res) => {
@@ -16,6 +18,54 @@ router.get("/:id", authorisedOnly, async (req, res) => {
   if (!collection) return res.sendStatus(403);
 
   res.status(200).send({ collection });
+});
+
+router.post("/:id/entry", authorisedOnly, async (req, res) => {
+  if (!req.user) return res.sendStatus(403);
+
+  const id = Number(req.params.id);
+  if (!id) return res.sendStatus(400);
+
+  if (!req.body.data) return res.sendStatus(400);
+
+  try {
+    JSON.parse(req.body.data);
+  } catch (err: any) {
+    res.status(400).send({ error: err.message });
+  }
+
+  const collection = await prisma.collection.findFirst({
+    where: { id: id, Artifact: { Database: { User: { id: req.user.id } } } },
+    include: {
+      Artifact: {
+        select: { name: true },
+        include: { Database: { select: { name: true } } },
+      },
+    },
+  });
+
+  if (!collection || !collection.Artifact || !collection.Artifact.Database)
+    return res.sendStatus(403);
+
+  const response = await axios.post(
+    `${Service.DB_ACCESS}/entry`,
+    JSON.stringify({
+      db_name: collection.Artifact.Database.name,
+      artifact: collection.Artifact.name,
+      collection: collection.name,
+      data: req.body.data,
+    })
+  );
+
+  if (response.data.code == 0) {
+    return res
+      .status(201)
+      .send({ message: "created Entry successfully", collection });
+  }
+
+  return res
+    .status(500)
+    .send({ message: "Failed to create entry", error: response.data.error });
 });
 
 router.put("/:id", authorisedOnly, async (req, res) => {

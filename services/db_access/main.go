@@ -20,8 +20,10 @@ func main() {
 	router := gin.Default()
 	dbClient = mongodb.GetClient()
 
-	router.POST("/allocate", routes.AllotDatabase)
 	router.GET("/ping", routes.Ping)
+
+	router.POST("/allocate", routes.AllotDatabase)
+	router.POST("/entry", routes.NewEntry)
 
 	fmt.Printf("ok see here %s\n", configs.Env.Mongodb_Hostname)
 	router.Run(fmt.Sprintf(":%s", port))

@@ -1,4 +1,4 @@
-package routes
+package handlers
 
 import (
 	"context"
@@ -63,12 +63,14 @@ func NewEntry(c *gin.Context) {
 	}
 
 	type Entry struct {
-		Name string `bson:"name"`
-		Data []struct {
-			ID   int         `json:"id"`
-			Item interface{} `json:"item"`
-		} `bson:"data"`
-		NextID int `bson:"next_id"`
+		ID   int         `json:"id"`
+		Data interface{} `json:"data"`
+	}
+
+	type Collection struct {
+		Name   string  `bson:"name"`
+		Data   []Entry `bson:"data"`
+		NextID int     `bson:"next_id"`
 	}
 
 	mongodb_hostname := configs.Env.Mongodb_Hostname
@@ -91,7 +93,7 @@ func NewEntry(c *gin.Context) {
 	var err error
 
 	if true {
-		// Parse Data -> Unmarshal JSON
+		// If Object field is set, parse the JSON data
 		err = json.Unmarshal([]byte(userRequest.Data), &newData)
 		if err != nil {
 			msg := fmt.Sprintf("Error parsing JSON: %s", err)
@@ -100,33 +102,48 @@ func NewEntry(c *gin.Context) {
 		}
 	}
 
-	existingEntry := Entry{}
+	existingCollection := Collection{}
 
-	err = collection.FindOne(ctx, bson.M{"name": userRequest.Collection}).Decode(&existingEntry)
+	err = collection.FindOne(ctx, bson.M{"name": userRequest.Collection}).Decode(&existingCollection)
 
 	var nextID int
-
 	if err == nil {
 		// Entry exists, update its value
-		nextID = existingEntry.NextID
+		nextID = existingCollection.NextID
 	} else {
 		nextID = 0
 	}
 
-	newEntry := struct {
-		ID   int         `json:"id"`
-		Item interface{} `json:"item"`
-	}{
-		ID:   nextID,
-		Item: newData,
-	}
+	if err == nil {
+		// Entry exists, update its value
+		newEntry := Entry{
+			ID:   nextID,
+			Data: newData,
+		}
 
-	update := bson.M{
-		"$push": bson.M{"data": newEntry},
-		"$set":  bson.M{"next_id": nextID + 1},
-	}
+		update := bson.M{"$push": bson.M{"data": newEntry}, "$set": bson.M{"next_id": nextID + 1}}
+		_, err := collection.UpdateOne(ctx, bson.M{"name": userRequest.Collection}, update)
 
-	_, err = collection.UpdateOne(ctx, bson.M{"name": userRequest.Collection}, update)
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Error updating value",
+				"code":    1})
+		}
+	} else {
+		// Entry doesn't exist, create a new one
+		newEntry := Collection{
+			Name: userRequest.Collection,
+			Data: []Entry{
+				{
+					ID:   0,
+					Data: newData,
+				},
+			},
+			NextID: 1,
+		}
+
+		_, err = collection.InsertOne(ctx, newEntry)
+	}
 
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -138,4 +155,45 @@ func NewEntry(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("Successfully Created/Updated Entry in %s", userRequest.Collection),
 		"code":    0})
+}
+
+func GetEntries(c *gin.Context) {
+	type UserRequest struct {
+		DBName     string `json:"db_name"`
+		Artifact   string `json:"artifact"`
+		Collection string `json:"collection"`
+	}
+
+	type Entry struct {
+		Name string `bson:"name"`
+		Data []struct {
+			ID   int         `json:"id"`
+			Data interface{} `json:"data"`
+		} `bson:"data"`
+	}
+
+	var userRequest UserRequest
+	if err := c.BindJSON(&userRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	client := mongodb.GetClient()
+	db := client.Database(userRequest.DBName)
+	collection := db.Collection(userRequest.Artifact)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	entry := Entry{}
+	fmt.Println(userRequest)
+	if err := collection.FindOne(ctx, bson.M{"name": userRequest.Collection}).Decode(&entry); err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": entry.Data,
+		"code": 0})
 }

@@ -2,9 +2,12 @@ package mongodb
 
 import (
 	"context"
+	"reflect"
 	"sync"
 
 	"github.com/marsian83/one-panel/services/db_access/configs"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -18,7 +21,9 @@ func GetClient() *mongo.Client {
 	once.Do(func() {
 		db_uri := configs.Env.Mongodb_URI
 
-		clientOptions := options.Client().ApplyURI(db_uri)
+		tM := reflect.TypeOf(bson.M{})
+		reg := bson.NewRegistryBuilder().RegisterTypeMapEntry(bsontype.EmbeddedDocument, tM).Build()
+		clientOptions := options.Client().ApplyURI(db_uri).SetRegistry(reg)
 
 		client, err := mongo.Connect(context.TODO(), clientOptions)
 

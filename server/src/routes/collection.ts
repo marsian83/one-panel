@@ -1,5 +1,5 @@
 import express from "express";
-import { authorisedOnly } from "../middleware/auth";
+import { authorisedOnly, unauthorisedOnly } from "../middleware/auth";
 import { prisma } from "../../db";
 import axios from "axios";
 import { Service } from "../types/microservices";

@@ -33,7 +33,10 @@ router.post("/new", authorisedOnly, async (req, res) => {
   if (!(name && plan && (icon.codepoint || icon.imageUrl)))
     return res.sendStatus(400);
 
-  const mongodb_username = `one${req.user.id.toString()}`.replace(" ", "");
+  const mongodb_username = `one${req.user.id}_${req.user.username}`.replace(
+    " ",
+    ""
+  );
   const mongodb_passwd = sha256(
     (req.user.id + req.user.username.length + Math.random() * 2e26).toString()
   );

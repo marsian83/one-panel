@@ -7,6 +7,7 @@ import EntryField from "./components/EntryField";
 import ListView from "./components/ListView";
 import { Artifact, Collection } from "../../interfaces/Data";
 import api from "../../helpers/api";
+import { deepCopy } from "../../helpers/utils";
 
 export default function PanelPage() {
   const { id } = useParams();
@@ -15,7 +16,7 @@ export default function PanelPage() {
   >();
 
   const [collection, setCollection] = useState<Collection | null>();
-  const [selectedCollection, setSelectedCollection] = useState<number>();
+  const [selectedCollection, setSelectedCollection] = useState<number | null>();
   const [newObj, setNewObj] = useState<object>({});
   const [mode, setMode] = useState<"new" | "list">("new");
   const [erronous, setErronous] = useState(true);
@@ -40,6 +41,19 @@ export default function PanelPage() {
   useEffect(() => {
     loadSelectedCollection();
   }, [selectedCollection]);
+
+  async function createNewEntry() {
+    if (selectedCollection) {
+      const entryData = deepCopy(newObj);
+      setNewObj({});
+      const r = selectedCollection;
+      setSelectedCollection(null);
+      setTimeout(() => {
+        setSelectedCollection(r);
+      }, 10);
+      await api.newEntry(selectedCollection, entryData);
+    }
+  }
 
   return (
     <div className="h-[85vh] flex">
@@ -123,6 +137,7 @@ export default function PanelPage() {
                     <button
                       className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
                       disabled={!erronous}
+                      onClick={createNewEntry}
                     >
                       Add Entry
                     </button>

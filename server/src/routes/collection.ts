@@ -38,19 +38,22 @@ router.post("/:id/entry", authorisedOnly, async (req, res) => {
     where: { id: id, Artifact: { Database: { User: { id: req.user.id } } } },
     include: {
       Artifact: {
-        select: { name: true },
         include: { Database: { select: { name: true } } },
       },
     },
   });
-
   if (!collection || !collection.Artifact || !collection.Artifact.Database)
     return res.sendStatus(403);
+  const mongodb_dbname =
+    `onelot${req.user.id}_${collection.Artifact.Database.name}`.replace(
+      " ",
+      ""
+    );
 
   const response = await axios.post(
     `${Service.DB_ACCESS}/entry`,
     JSON.stringify({
-      db_name: collection.Artifact.Database.name,
+      db_name: mongodb_dbname,
       artifact: collection.Artifact.name,
       collection: collection.name,
       data: req.body.data,
@@ -58,9 +61,7 @@ router.post("/:id/entry", authorisedOnly, async (req, res) => {
   );
 
   if (response.data.code == 0) {
-    return res
-      .status(201)
-      .send({ message: "created Entry successfully", collection });
+    return res.status(201).send({ message: "created Entry successfully" });
   }
 
   return res

@@ -207,6 +207,19 @@ const api = {
 
     return response;
   },
+
+  async newEntry(collectionId: number, data: object) {
+    if (!jwt) throw new Error("Unauthorized - newCollection");
+
+    const response = (
+      await client.post<{ message: string; error?: string }>(
+        `/collection/${collectionId}/entry`,
+        JSON.stringify({ id: collectionId, data: JSON.stringify(data) })
+      )
+    ).data;
+
+    return response;
+  },
 };
 
 export default api;

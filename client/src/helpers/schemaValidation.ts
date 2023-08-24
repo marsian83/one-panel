@@ -1,4 +1,4 @@
-import { Schema } from "../interfaces/Data";
+import { Definition, Schema } from "../interfaces/Data";
 import { deepCopy } from "./utils";
 
 export class SchemaController {
@@ -118,20 +118,31 @@ export class SchemaController {
     return { valid: true, message: "Valid" };
   }
 
-  getInterfaceString() {
-    let interf: any = {};
-    this.definition.forEach((definition) => {
-      if (Array.isArray(definition.type)) {
-        const insideValidator = new SchemaController();
-        insideValidator.define(definition.type);
-        interf[definition.name] = insideValidator.getInterfaceString;
+  getInterfaceString(): string {
+    let interfaceString = "{";
+    const definition = this.definition;
+
+    for (const entry of definition) {
+      if (Array.isArray(entry.type)) {
+        const midSC = new SchemaController();
+        midSC.define(entry.type);
+        const nestedInterface = midSC.getInterfaceString();
+        interfaceString += `${entry.name}${
+          entry.optional ? "?" : ""
+        }: ${nestedInterface}[];\n`;
+      } else if (entry.type === "reference") {
+        interfaceString += `${entry.name}${entry.optional ? "?" : ""}: ${
+          entry.refers || "unknown"
+        };\n`;
+      } else {
+        interfaceString += `${entry.name}${entry.optional ? "?" : ""}: ${
+          entry.type
+        };\n`;
       }
-      if (definition.type === "reference") {
-      }
-      interf[`${definition.name}${definition.optional ? "?" : ""}`] =
-        definition.type;
-    });
-    return JSON.stringify(interf);
+    }
+
+    interfaceString += "}\n";
+    return interfaceString;
   }
 }
 

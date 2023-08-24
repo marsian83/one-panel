@@ -3,6 +3,8 @@ import { Definition } from "../../../interfaces/Data";
 import dummyEntries from "../../../assets/data/entries";
 import { twMerge } from "tailwind-merge";
 import MaterialIcon from "../../../common/MaterialIcon";
+import api from "../../../helpers/api";
+import axios from "axios";
 
 interface ListViewProps {
   schema: Definition;
@@ -14,7 +16,23 @@ export default function ListView(props: ListViewProps) {
 
   const [visibility, setVisibility] = useState<object>({});
 
-  const content = dummyEntries;
+  const exposedApiBase = import.meta.env.VITE_PUBLIC_ENDPOINT_BASE;
+
+  // const content = dummyEntries;
+  const [content, setContent] = useState<Array<any>>();
+
+  async function loadData() {
+    const uri = await api.getCollectionEndpoint(props.collectionId);
+    const cnt = await axios.get<{ id: number; data: object }[]>(
+      `http://${exposedApiBase}/d/${uri}`.replace("localhost", "127.0.0.1")
+    );
+
+    setContent(cnt.data.map((d) => d.data));
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -41,40 +59,41 @@ export default function ListView(props: ListViewProps) {
           </label>
         ))}
       </div>
-
-      <table className="flex-1 mt-10">
-        <thead>
-          <tr>
-            {Object.keys(content[0]).map((item, key) =>
-              visibility[item as keyof typeof visibility] ? (
-                <th className="border h-16 font-medium" key={key}>
-                  {item}
-                </th>
-              ) : null
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {content.map((val, key) => {
-            return (
-              <tr
-                key={key}
-                className="relative h-10 hover:bg-secondary hover:bg-opacity-30 cursor-pointer"
-              >
-                {Object.keys(content[0]).map((item, key) =>
-                  visibility[item as keyof typeof visibility] ? (
-                    <td className="border pl-2" key={key}>
-                      {JSON.stringify(val[item as keyof typeof val])}
-                    </td>
-                  ) : (
-                    <></>
-                  )
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      {content && (
+        <table className="flex-1 mt-10">
+          <thead>
+            <tr>
+              {Object.keys(content[0]).map((item, key) =>
+                visibility[item as keyof typeof visibility] ? (
+                  <th className="border h-16 font-medium" key={key}>
+                    {item}
+                  </th>
+                ) : null
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {content.map((val, key) => {
+              return (
+                <tr
+                  key={key}
+                  className="relative h-10 hover:bg-secondary hover:bg-opacity-30 cursor-pointer"
+                >
+                  {Object.keys(content[0]).map((item, key) =>
+                    visibility[item as keyof typeof visibility] ? (
+                      <td className="border pl-2" key={key}>
+                        {JSON.stringify(val[item as keyof typeof val])}
+                      </td>
+                    ) : (
+                      <></>
+                    )
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

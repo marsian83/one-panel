@@ -232,6 +232,18 @@ const api = {
 
     return response.endpoints;
   },
+
+  async getCollectionEndpoint(id: number) {
+    if (!jwt) throw new Error("Unauthorized - getEndpoints");
+
+    const response = (
+      await client.get<{ endpoint: { id: number; uri: string } }>(
+        `/collection/${id}/endpoint`
+      )
+    ).data;
+
+    return response.endpoint.uri;
+  },
 };
 
 export default api;

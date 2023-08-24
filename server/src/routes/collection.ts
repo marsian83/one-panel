@@ -20,6 +20,43 @@ router.get("/:id", authorisedOnly, async (req, res) => {
   res.status(200).send({ collection });
 });
 
+router.get("/:id/endpoint", authorisedOnly, async (req, res) => {
+  if (!req.user) return res.sendStatus(403);
+
+  const id = Number(req.params.id);
+  if (!id) return res.sendStatus(400);
+
+  const collection = await prisma.collection.findFirst({
+    where: { id: id, Artifact: { Database: { userId: req.user.id } } },
+    select: {
+      id: true,
+      name: true,
+      Artifact: {
+        select: { name: true, Database: { select: { name: true } } },
+      },
+    },
+  });
+
+  if (!collection || !collection.Artifact || !collection.Artifact.Database)
+    return res.sendStatus(403);
+
+  const mongodb_dbname =
+    `onelot${req.user.id}_${collection.Artifact.Database.name}`.replace(
+      " ",
+      ""
+    );
+
+  const endpoint = await axios.get(
+    `${Service.DB_ACCESS}/endpoints?db=${mongodb_dbname}&artifact=${
+      collection.Artifact.name
+    }&collections=${JSON.stringify([
+      { id: collection.id, name: collection.name },
+    ])}`
+  );
+
+  res.status(200).send({ endpoint: endpoint.data.endpoints[0] });
+});
+
 router.post("/:id/entry", authorisedOnly, async (req, res) => {
   if (!req.user) return res.sendStatus(403);
 

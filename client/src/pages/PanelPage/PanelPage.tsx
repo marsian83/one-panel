@@ -9,6 +9,8 @@ import { Artifact, Collection } from "../../interfaces/Data";
 import api from "../../helpers/api";
 import { deepCopy } from "../../helpers/utils";
 import useQuery from "../../hooks/useQuery";
+import useModal from "../../hooks/useModal";
+import InterfaceModal from "./components/InterfaceModal";
 
 export default function PanelPage() {
   const { id } = useParams();
@@ -59,6 +61,8 @@ export default function PanelPage() {
       await api.newEntry(selectedCollection, entryData);
     }
   }
+
+  const modal = useModal();
 
   return (
     <div className="h-[85vh] flex">
@@ -113,14 +117,30 @@ export default function PanelPage() {
               </button>
             </div>
 
-            {true && (
-              <Link
-                to={`/collection/${selectedCollection}/schema`}
-                className="px-5 py-2 btn-3 gap-x-2 rounded"
-              >
-                <MaterialIcon codepoint="ead3" />
-                Schema
-              </Link>
+            {collection && (
+              <div className="flex gap-x-10">
+                <button
+                  className="px-5 py-2 btn-3 gap-x-2 rounded"
+                  onClick={() =>
+                    modal.show(
+                      <InterfaceModal
+                        name={collection.name}
+                        schema={collection.schema}
+                      />
+                    )
+                  }
+                >
+                  <MaterialIcon codepoint="f1c6" /> Interface
+                </button>
+
+                <Link
+                  to={`/collection/${selectedCollection}/schema`}
+                  className="px-5 py-2 btn-3 gap-x-2 rounded"
+                >
+                  <MaterialIcon codepoint="ead3" />
+                  Schema
+                </Link>
+              </div>
             )}
           </div>
         )}

@@ -131,9 +131,11 @@ function AuthLoader({ children }: { children: ReactNode }) {
   }, []);
 
   return loading ? (
-    <>
-      <Loader />
-    </>
+    <article className="flex justify-center items-center">
+      <div className="w-28 h-28">
+        <Loader />
+      </div>
+    </article>
   ) : (
     <>{children}</>
   );

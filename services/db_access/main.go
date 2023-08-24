@@ -21,10 +21,9 @@ func main() {
 	dbClient = mongodb.GetClient()
 
 	router.GET("/ping", handlers.Ping)
-	router.PUT("/entries", handlers.GetEntries)
+	router.GET("/entries", handlers.GetEntries)
 	router.POST("/allocate", handlers.AllotDatabase)
 	router.POST("/entry", handlers.NewEntry)
 
-	fmt.Printf("ok see here %s\n", configs.Env.Mongodb_Hostname)
 	router.Run(fmt.Sprintf(":%s", port))
 }

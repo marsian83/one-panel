@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/marsian83/one-panel/api/configs"
 	"github.com/marsian83/one-panel/api/src/handlers"
@@ -18,6 +19,8 @@ func main() {
 	port := configs.Env.Port
 
 	router := gin.Default()
+	router.Use(cors.Default())
+
 	dbClient = mongodb.GetClient()
 
 	router.GET("/ping", handlers.Ping)

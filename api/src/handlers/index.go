@@ -54,9 +54,11 @@ func GetEntries(c *gin.Context) {
 
 	entry := Entry{}
 
+	fmt.Println(meta)
+
 	if err := collection.FindOne(ctx, bson.M{"name": meta.Collection}).Decode(&entry); err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to fetch collection entry"})
 		return
 	}
 

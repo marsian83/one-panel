@@ -16,6 +16,8 @@ type env struct {
 	Mongodb_URI      string `mapstructure:"MONGODB_URI"`
 	Mongodb_Hostname string `mapstructure:"MONGODB_HOSTNAME"`
 	Port             string `mapstructure:"PORT"`
+	AES_key          string `mapstructure:"AES_KEY"`
+	AES_iv           string `mapstructure:"AES_IV"`
 }
 
 func loadEnvVariables() (config *env) {

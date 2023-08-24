@@ -8,6 +8,7 @@ import ListView from "./components/ListView";
 import { Artifact, Collection } from "../../interfaces/Data";
 import api from "../../helpers/api";
 import { deepCopy } from "../../helpers/utils";
+import useQuery from "../../hooks/useQuery";
 
 export default function PanelPage() {
   const { id } = useParams();
@@ -21,6 +22,8 @@ export default function PanelPage() {
   const [mode, setMode] = useState<"new" | "list">("new");
   const [erronous, setErronous] = useState(true);
 
+  const query = useQuery();
+
   async function loadData() {
     const artifact = await api.getArtifact(Number(id));
     setArtifact(artifact);
@@ -28,6 +31,8 @@ export default function PanelPage() {
 
   useEffect(() => {
     loadData();
+    const predecidedCollection = Number(query.get("selectedCollection"));
+    if (predecidedCollection) setSelectedCollection(predecidedCollection);
   }, []);
 
   async function loadSelectedCollection() {
@@ -136,12 +141,12 @@ export default function PanelPage() {
                   <div className="relative self-center mt-8">
                     <button
                       className="btn-3 px-9 py-3 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
-                      disabled={!erronous}
+                      disabled={erronous}
                       onClick={createNewEntry}
                     >
                       Add Entry
                     </button>
-                    {!erronous && (
+                    {erronous && (
                       <div className="absolute z-1 top-0 left-0 w-full h-full group cursor-not-allowed">
                         <ErrorTooltip className="hidden group-hover:block" />
                       </div>
@@ -186,6 +191,10 @@ function ErrorTooltip(props: { className?: string }) {
 
   useEffect(() => {
     window.addEventListener("mousemove", attachToMouse);
+    attachToMouse({
+      x: window.innerWidth / 2,
+      y: 50 * window.innerHeight,
+    } as any);
 
     return () => window.removeEventListener("mousemove", attachToMouse);
   }, []);

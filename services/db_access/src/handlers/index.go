@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marsian83/one-panel/api/src/helpers"
 	"github.com/marsian83/one-panel/services/db_access/configs"
+	"github.com/marsian83/one-panel/services/db_access/src/helpers"
 	"github.com/marsian83/one-panel/services/db_access/src/mongodb"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -27,7 +27,6 @@ func AllotDatabase(c *gin.Context) {
 	}
 
 	mongodb_hostname := configs.Env.Mongodb_Hostname
-	fmt.Print(mongodb_hostname)
 
 	var userRequest UserRequest
 	if err := c.BindJSON(&userRequest); err != nil {
@@ -74,9 +73,6 @@ func NewEntry(c *gin.Context) {
 		Data   []Entry `bson:"data"`
 		NextID int     `bson:"next_id"`
 	}
-
-	mongodb_hostname := configs.Env.Mongodb_Hostname
-	fmt.Print(mongodb_hostname)
 
 	var userRequest UserRequest
 	if err := c.BindJSON(&userRequest); err != nil {
@@ -188,7 +184,6 @@ func GetEntries(c *gin.Context) {
 	defer cancel()
 
 	entry := Entry{}
-	fmt.Println(userRequest)
 	if err := collection.FindOne(ctx, bson.M{"name": userRequest.Collection}).Decode(&entry); err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
@@ -200,19 +195,19 @@ func GetEntries(c *gin.Context) {
 		"code": 0})
 }
 
-func GetEndpoint(c *gin.Context) {
+func GetEndpoints(c *gin.Context) {
 	db := c.Query("db")
 	artifact := c.Query("artifact")
 	collectionsRaw := c.Query("collections")
 
 	type Collection struct {
-		id   int
-		name string
+		ID   int    `json:"id"`
+		Name string `json:"name"`
 	}
 
 	type Endpoint struct {
-		id  int
-		uri string
+		ID  int    `json:"id"`
+		Uri string `json:"uri"`
 	}
 
 	var collections []Collection
@@ -226,14 +221,15 @@ func GetEndpoint(c *gin.Context) {
 	var response []Endpoint
 
 	for _, collection := range collections {
-		str := fmt.Sprintf("{\"db\":\"%s\",\"artifact\":\"%s\",\"collection\":\"%s\"}", db, artifact, collection.name)
+		str := fmt.Sprintf("{\"db\":\"%s\",\"artifact\":\"%s\",\"collection\":\"%s\"}", db, artifact, collection.Name)
 		uri, err := helpers.EncryptAES(str)
+
 		if err != nil {
-			fmt.Printf("Error while encrypting %s -> %s", strconv.Itoa(collection.id), collection.name)
+			fmt.Printf("Error while encrypting %s -> %s", strconv.Itoa(collection.ID), collection.Name)
 			fmt.Println(err)
 			return
 		}
-		response = append(response, Endpoint{id: collection.id, uri: uri})
+		response = append(response, Endpoint{ID: collection.ID, Uri: uri})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"code": 0, "endpoints": response})

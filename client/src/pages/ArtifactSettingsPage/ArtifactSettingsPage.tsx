@@ -108,7 +108,11 @@ export default function ArtifactSettingsPage() {
 
         <div className="grid grid-flow-row gap-5 grid-cols-5">
           {artifact.collections.map((collection) => (
-            <CollectionCard key={collection.id} collection={collection} />
+            <CollectionCard
+              key={collection.id}
+              artifactId={artifact.id}
+              collection={collection as Collection}
+            />
           ))}
           <div className="flex justify-center items-center">
             <button

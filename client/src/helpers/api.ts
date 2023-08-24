@@ -186,7 +186,7 @@ const api = {
   },
 
   async getCollection(id: number) {
-    if (!jwt) throw new Error("Unauthorized - newCollection");
+    if (!jwt) throw new Error("Unauthorized - getCollection");
 
     const collection = (
       await client.get<{ collection: Collection }>(`/collection/${id}`)
@@ -196,7 +196,7 @@ const api = {
   },
 
   async updateCollection(id: number, data: { name?: string; schema?: string }) {
-    if (!jwt) throw new Error("Unauthorized - newCollection");
+    if (!jwt) throw new Error("Unauthorized - updateColelction");
 
     const response = (
       await client.put<{ message: string; collection: Collection }>(
@@ -209,7 +209,7 @@ const api = {
   },
 
   async newEntry(collectionId: number, data: object) {
-    if (!jwt) throw new Error("Unauthorized - newCollection");
+    if (!jwt) throw new Error("Unauthorized - newEntry");
 
     const response = (
       await client.post<{ message: string; error?: string }>(
@@ -219,6 +219,18 @@ const api = {
     ).data;
 
     return response;
+  },
+
+  async getArtifactEndpoints(id: number) {
+    if (!jwt) throw new Error("Unauthorized - getEndpoints");
+
+    const response = (
+      await client.get<{ endpoints: { id: number; uri: string }[] }>(
+        `/artifact/${id}/endpoints`
+      )
+    ).data;
+
+    return response.endpoints;
   },
 };
 

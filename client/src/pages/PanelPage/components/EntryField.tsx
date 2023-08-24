@@ -26,7 +26,7 @@ export default function EntryField(props: EntryFieldProps) {
   useEffect(() => {
     const result = sc.validate(getNestedValue(props.nest, props.data));
     setValidationResult(result);
-    if (props.setErronous) props.setErronous(result.valid);
+    if (props.setErronous) props.setErronous(!result.valid);
   }, [props.data]);
 
   return (

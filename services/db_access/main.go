@@ -22,6 +22,7 @@ func main() {
 
 	router.GET("/ping", handlers.Ping)
 	router.GET("/entries", handlers.GetEntries)
+	router.GET("/endpoints", handlers.GetEndpoints)
 	router.POST("/allocate", handlers.AllotDatabase)
 	router.POST("/entry", handlers.NewEntry)
 

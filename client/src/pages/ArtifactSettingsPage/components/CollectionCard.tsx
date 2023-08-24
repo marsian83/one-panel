@@ -4,15 +4,22 @@ import { Collection } from "../../../interfaces/Data";
 
 interface CollectionCardProps {
   collection: Collection;
+  artifactId: number;
 }
 
 export default function CollectionCard(props: CollectionCardProps) {
-  const { collection } = props;
+  const { collection, artifactId } = props;
 
   const navigate = useNavigate();
 
   const options = [
-    { icon: "e89e", tooltip: "Open panel" },
+    {
+      icon: "e89e",
+      tooltip: "Open panel",
+      action: () => {
+        navigate(`/panel/${artifactId}?selectedCollection=${collection.id}`);
+      },
+    },
     { icon: "e3c9", tooltip: "Rename" },
     {
       icon: "ead3",

@@ -45,11 +45,16 @@ router.get("/:id/endpoints", authorisedOnly, async (req, res) => {
 
   if (!artifact || !artifact.Database) return res.sendStatus(403);
 
+  const mongodb_dbname =
+    `onelot${req.user.id}_${artifact.Database.name}`.replace(" ", "");
+
   const endpoints = await axios.get(
-    `${Service.DB_ACCESS}/endpoints?db=${artifact.Database.name}&artifact=${artifact.name}&collections=${artifact.collections}`
+    `${Service.DB_ACCESS}/endpoints?db=${mongodb_dbname}&artifact=${
+      artifact.name
+    }&collections=${JSON.stringify(artifact.collections)}`
   );
 
-  res.status(200).send({ endpoints });
+  res.status(200).send({ endpoints: endpoints.data.endpoints });
 });
 
 router.post("/:id/collection", authorisedOnly, async (req, res) => {

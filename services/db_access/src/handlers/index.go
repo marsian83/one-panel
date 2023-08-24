@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/marsian83/one-panel/api/src/helpers"
 	"github.com/marsian83/one-panel/services/db_access/configs"
 	"github.com/marsian83/one-panel/services/db_access/src/mongodb"
 	"go.mongodb.org/mongo-driver/bson"
@@ -196,4 +198,43 @@ func GetEntries(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"data": entry.Data,
 		"code": 0})
+}
+
+func GetEndpoint(c *gin.Context) {
+	db := c.Query("db")
+	artifact := c.Query("artifact")
+	collectionsRaw := c.Query("collections")
+
+	type Collection struct {
+		id   int
+		name string
+	}
+
+	type Endpoint struct {
+		id  int
+		uri string
+	}
+
+	var collections []Collection
+
+	if err := json.Unmarshal([]byte(collectionsRaw), &collections); err != nil {
+		msg := fmt.Sprintf("Error parsing JSON: %s", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
+		return
+	}
+
+	var response []Endpoint
+
+	for _, collection := range collections {
+		str := fmt.Sprintf("{\"db\":\"%s\",\"artifact\":\"%s\",\"collection\":\"%s\"}", db, artifact, collection.name)
+		uri, err := helpers.EncryptAES(str)
+		if err != nil {
+			fmt.Printf("Error while encrypting %s -> %s", strconv.Itoa(collection.id), collection.name)
+			fmt.Println(err)
+			return
+		}
+		response = append(response, Endpoint{id: collection.id, uri: uri})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": 0, "endpoints": response})
 }

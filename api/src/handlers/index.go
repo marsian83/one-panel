@@ -2,14 +2,12 @@ package handlers
 
 import (
 	"context"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marsian83/one-panel/api/configs"
 	"github.com/marsian83/one-panel/api/src/helpers"
 	"github.com/marsian83/one-panel/api/src/mongodb"
 	"go.mongodb.org/mongo-driver/bson"
@@ -34,22 +32,16 @@ func GetEntries(c *gin.Context) {
 		} `bson:"data"`
 	}
 
-	uri, _ := hex.DecodeString(c.Param("uri"))
+	uri := (c.Param("uri"))
 
-	key, _ := hex.DecodeString(configs.Env.AES_key)
-	iv, _ := hex.DecodeString(configs.Env.AES_iv)
-
-	encrypted := []byte(uri)
-
-	decrypted, err := helpers.DecryptAES([]byte(key), []byte(iv), encrypted)
+	rawJson, err := helpers.DecryptAES(uri)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Error:": err})
-		return
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
 
 	var meta Meta
-	if err := json.Unmarshal([]byte(string(decrypted)), &meta); err != nil {
+	if err := json.Unmarshal([]byte(rawJson), &meta); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid URI"})
 		return
 	}

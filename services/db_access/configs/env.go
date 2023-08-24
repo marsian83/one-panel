@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -11,7 +10,6 @@ var Env *env
 
 func InitEnvConfigs() {
 	Env = loadEnvVariables()
-	fmt.Printf("I read %s\n\n", Env.Mongodb_URI)
 }
 
 type env struct {

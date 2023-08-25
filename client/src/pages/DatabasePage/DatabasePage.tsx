@@ -26,7 +26,10 @@ export default function DatabasePage() {
 
   return (
     <>
-      <Header name={database ? database.name : "loading"} />
+      <Header
+        name={database ? database.name : "loading"}
+        uri={database ? database.uri : "loading"}
+      />
 
       <section className="bg-foreground bg-opacity-10 p-page-lg py-12 min-h-[70vh]">
         <div className="flex justify-between">

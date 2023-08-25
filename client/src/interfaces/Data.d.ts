@@ -14,6 +14,7 @@ export interface Database {
   icon: { codepoint?: Icon; imageUrl?: string };
   artifacts: Artifact[];
   lastUpdated: string;
+  uri: string;
 }
 
 export interface Artifact {

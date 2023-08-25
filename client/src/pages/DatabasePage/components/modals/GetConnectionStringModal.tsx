@@ -10,16 +10,14 @@ enum Stage {
   success,
 }
 
-export default function GetConnectionStringModal() {
+export default function GetConnectionStringModal(props: { uri: string }) {
   const [visible, setVisible] = useState({
     password: false,
     uri: false,
   });
 
   const [stage, setStage] = useState<Stage>(Stage.password);
-  const [connectionString, setConnectionString] = useState<string>(
-    "mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]",
-  );
+  const [connectionString, setConnectionString] = useState<string>(props.uri);
   const [errorMsg, setErrorMsg] = useState("");
 
   function submitHandler() {
@@ -30,7 +28,7 @@ export default function GetConnectionStringModal() {
           setStage(Stage.success);
         } else {
           setErrorMsg(
-            "The lorem ipsum is a placeholder text used in publishing and graphic design. This filler text is a short paragraph that contains all the letters of the alphabet. The characters are spread out evenly so that the reader's attention is focused on the layout of the text instead of its content.",
+            "The lorem ipsum is a placeholder text used in publishing and graphic design. This filler text is a short paragraph that contains all the letters of the alphabet. The characters are spread out evenly so that the reader's attention is focused on the layout of the text instead of its content."
           );
           setStage(Stage.error);
         }

@@ -2,7 +2,7 @@ import useModal from "../../../hooks/useModal";
 import EndpointsModal from "./modals/EndpointsModal";
 import GetConnectionStringModal from "./modals/GetConnectionStringModal";
 
-export default function Header(props: { name: string }) {
+export default function Header(props: { name: string; uri: string }) {
   const modal = useModal();
 
   return (
@@ -12,7 +12,9 @@ export default function Header(props: { name: string }) {
         <div className="flex gap-x-4">
           <button
             className="btn-1 px-6 py-2 font-medium"
-            onClick={() => modal.show(<GetConnectionStringModal />)}
+            onClick={() =>
+              modal.show(<GetConnectionStringModal uri={props.uri} />)
+            }
           >
             Connection string
           </button>

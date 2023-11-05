@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <a name="readme-top"></a>
 
 <br />

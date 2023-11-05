@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <a name="readme-top"></a>
 
 <br />
@@ -207,3 +208,6 @@ Use this space to list resources you find helpful and would like to give credit 
 - [React Icons](https://react-icons.github.io/react-icons/search)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+=======
+
+>>>>>>> 58c2a911ec291fce13f4977dd1bd060f29ce2d2a

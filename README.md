@@ -14,7 +14,7 @@
     <!-- <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a> -->
     <!-- <br /> -->
     <br />
-    <a href="https://one-panel.okeanos.solutions">View Demo</a>
+    <a href="https://onepanel.okeanos.solutions">View Demo</a>
     ·
     <a href="https://github.com/marsian83/one-panel/issues">Report Bug</a>
     ·
@@ -39,6 +39,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+    <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#usage">Usage</a></li>
   </ol>
 </details>
@@ -90,6 +91,33 @@ You will need to have the following dependencies installed on your system
 - Golang [click here](https://go.dev/doc/install)
 - NodeJs [click here](https://nodejs.org/en/download/releases)
 - Access to a remote or local mongodb instance (connection URI)
+
+## Screenshots
+
+#### Auth Page
+<img width="1120" alt="Screenshot 2023-08-11 135804" src="https://github.com/marsian83/one-panel/assets/114365550/c739cfc6-b282-4c5f-846c-731d22437ab5">
+
+#### Databases
+<img width="1120" alt="Screenshot 2023-08-11 140109" src="https://github.com/marsian83/one-panel/assets/114365550/999559ec-8fb0-4581-952d-108637dbecfb">
+
+#### Creating new Databases
+<img width="1120" alt="Screenshot 2023-08-11 140245" src="https://github.com/marsian83/one-panel/assets/114365550/4354634a-1901-4839-82d7-0e43d07f575e">
+
+#### Search through Databases
+<img width="1120" alt="Screenshot 2023-08-11 140416" src="https://github.com/marsian83/one-panel/assets/114365550/14b30144-1c9e-4646-80ac-4de55f8af309">
+
+#### Single Database view -> Artifacts page
+<img width="1120" alt="Screenshot 2023-08-11 140615" src="https://github.com/marsian83/one-panel/assets/114365550/50caa8bd-2c7c-4996-b55e-a1f8f75707c6">
+
+#### Panel/New Entry form
+<img width="1120" alt="Screenshot 2023-08-11 140756" src="https://github.com/marsian83/one-panel/assets/114365550/ff959f51-f393-42db-b6b6-859c5b9c693e">
+
+#### Current entries
+<img width="1120" alt="Screenshot 2023-08-11 141035" src="https://github.com/marsian83/one-panel/assets/114365550/c764d390-8a45-4232-bd4c-fb51372bdeb1">
+
+#### Schema
+<img width="1120" alt="Screenshot 2023-08-11 142640" src="https://github.com/marsian83/one-panel/assets/114365550/892a5542-885a-4da9-87b2-bb4a01053b2b">
+
 
 ### Installation
 

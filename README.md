@@ -30,6 +30,7 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+       <li><a href="#system-architecture">System Architecture</a></li>
       </ul>
     </li>
     <li>
@@ -75,6 +76,11 @@ The following technologies contributed signifactly to the development of this pr
 - TailwindCSS
 - golang
 - MongoDB
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## System Architecture
+<img width="825" alt="image" src="https://github.com/marsian83/one-panel/assets/114365550/8e648458-ed77-4d5a-82cc-7d65f6392810">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

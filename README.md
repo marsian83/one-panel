@@ -41,7 +41,7 @@
       </ul>
     </li>
     <li><a href="#screenshots">Screenshots</a></li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#usage">Usage - Demo Video</a></li>
   </ol>
 </details>
 
@@ -166,6 +166,6 @@ _Below is a rough step by step guide on how to get the project up and running_
 
 ## Usage
 
-The landing page is very barebones and contains links to most pages within the application.
+https://github.com/marsian83/one-panel/assets/114365550/a5370e4d-914d-4daa-b541-c786dd46e31e
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
